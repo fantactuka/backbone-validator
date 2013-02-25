@@ -1,5 +1,7 @@
 describe('Backbone.Validator', function() {
 
+  'use strict';
+
   var Validator = Backbone.Validator,
     validatorName = 'tempValidator',
     validatorMessage = 'Error message',
@@ -64,7 +66,7 @@ describe('Backbone.Validator', function() {
       }, {
         age: {
           fn: function(value) {
-            return value == this.value + 1;
+            return value === this.value + 1;
           }
         }
       }, { value: 9 });
@@ -131,15 +133,15 @@ describe('Backbone.Validator', function() {
 
     describe('fn', function() {
       expectToPass('fn', 'Sam', function(value) {
-        return value.length == 3;
+        return value.length === 3;
       });
 
       expectToFail('fn', 'Samuel', function(value) {
-        return value.length == 3;
+        return value.length === 3;
       });
 
       expectToFail('fn', 'Samuel', function(value) {
-        return value.length == 3 ? null : 'custom message';
+        return value.length === 3 ? null : 'custom message';
       }, 'custom message');
     });
 
@@ -194,7 +196,7 @@ describe('Backbone.Validator', function() {
 
         Validator._validateByEntries(validation, 1);
         expect(spy.callCount).toEqual(1);
-        expect(spy).toHaveBeenCalledWith(validation, 1, undefined)
+        expect(spy).toHaveBeenCalledWith(validation, 1, undefined);
       });
 
       it('accepts array for #_validateByEntry validations', function() {
@@ -303,7 +305,7 @@ describe('Backbone.Validator', function() {
 
         it('raises error when call missed validator', function() {
           expect(function() {
-            Validator._validateByName('_missed_validator')
+            Validator._validateByName('_missed_validator');
           }).toThrow('Invalid validator name: _missed_validator');
         });
       });
@@ -378,7 +380,7 @@ describe('Backbone.Validator', function() {
       it('raises error if model does not exist', function() {
         view.model = null;
         expect(function() {
-          view.bindValidation()
+          view.bindValidation();
         }).toThrow('Model is not provided');
       });
 
@@ -476,7 +478,7 @@ describe('Backbone.Validator', function() {
             },
             {
               fn: function(value) {
-                return !value.match(/\d/)
+                return !value.match(/\d/);
               },
               message: 'Should not include digits'
             }
@@ -484,7 +486,7 @@ describe('Backbone.Validator', function() {
 
           birthday: {
             fn: function(value) {
-              return _.isDate(value) && (+value < (+new Date))
+              return _.isDate(value) && (+value < (+new Date()));
             },
             message: 'Should be a valid date in the past'
           }
@@ -533,7 +535,7 @@ describe('Backbone.Validator', function() {
           model.set({ email: 'user@example.com', name: 'Sam' }, { validate: false });
           model.validate(['email', 'name']);
 
-          expect(spy.argsForCall[0][0]).toEqual({ email: 'user@example.com', name: 'Sam' })
+          expect(spy.argsForCall[0][0]).toEqual({ email: 'user@example.com', name: 'Sam' });
         });
 
         it('runs through passed attribute (as string)', function() {
@@ -541,7 +543,7 @@ describe('Backbone.Validator', function() {
           model.set({ email: 'user@example.com', name: 'Sam' }, { validate: false });
           model.validate('email');
 
-          expect(spy.argsForCall[0][0]).toEqual({ email: 'user@example.com' })
+          expect(spy.argsForCall[0][0]).toEqual({ email: 'user@example.com' });
         });
 
         it('runs through passed attributes only', function() {

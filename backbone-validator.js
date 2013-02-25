@@ -11,6 +11,9 @@
  */
 
 (function(Backbone, _) {
+
+  'use strict';
+
   var Validator = Backbone.Validator = {
 
     version: '0.0.1',
@@ -29,7 +32,9 @@
         var validation = validations[attrName];
         var error = this._validateByEntries(validation, attrValue, context);
 
-        error && (errors[attrName] = error);
+        if (error) {
+          (errors[attrName] = error);
+        }
       }, this);
 
       return _.size(errors) ? errors : null;
@@ -81,7 +86,10 @@
 
       _.chain([validations || []]).flatten().each(function(validation) {
         var error = this._validateByEntry(validation, attrValue, context);
-        error && errors.push(error);
+
+        if (error) {
+          errors.push(error);
+        }
       }, this);
 
       return errors.length ? _.uniq(_.flatten(errors)) : null;
@@ -102,7 +110,10 @@
 
       _.chain(validation).omit('message').each(function(attrExpectation, validatorName) {
         var error = this._validateByName(validatorName, attrValue, attrExpectation, message, context);
-        error && errors.push(error);
+
+        if (error) {
+          errors.push(error);
+        }
       }, this);
 
       return errors.length ? _.uniq(errors) : null;
@@ -169,7 +180,7 @@
             var attrErrors = errors[name];
 
             if (attrErrors && attrErrors.length) {
-              options.onInvalidField.call(this, name, value, attrErrors, model)
+              options.onInvalidField.call(this, name, value, attrErrors, model);
             } else {
               options.onValidField.call(this, name, value, model);
             }
@@ -272,7 +283,10 @@
 
         var errors = _.inject(models, function(memo, model, index) {
           var error = model.validate();
-          error && memo.push([index, error]);
+
+          if (error) {
+            memo.push([index, error]);
+          }
 
           return memo;
         }, []);
