@@ -1,6 +1,9 @@
 {
   "name": "the-web-app",
   "version": "0.0.1",
+  "scripts": {
+    "test": "grunt test"
+  },
   "dependencies": {},
   "devDependencies": {
     "grunt": "0.4.0",
