@@ -9,7 +9,7 @@ module.exports = function(grunt) {
       src: ['backbone-validator.js'],
       options: {
         specs: 'spec/**/*spec.js',
-        vendor: ['backbone/test/vendor/jquery.js', 'backbone/test/vendor/underscore.js', 'backbone/backbone.js'],
+        vendor: ['backbone/test/vendor/jquery.js', 'backbone/test/vendor/underscore.js', 'backbone/backbone.js']
       }
     },
     uglify: {
