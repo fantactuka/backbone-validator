@@ -194,23 +194,17 @@
       /**
        * Validation method called by Backbone's internal `#_validate()` or directly from model's instance
        *
-       * @param {Object|Array} [attrs] - optional hash/array of attributes to validate
+       * @param {Object|Array} [attributes] - optional hash/array of attributes to validate
        * @param {Object} [options] - standard Backbone.Model's options list, including `suppress` option. When it's
        * set to true method will store errors into `#errors` property, but return null, so model seemed to be valid
        *
        * @return {null|Object} - null if model is valid, otherwise - collection of errors associated with attributes
        */
-      validate: function(attrs, options) {
-        var validation = this.validation || {};
+      validate: function(attributes, options) {
+        var validation = this.validation || {},
+          attrs = this._getAttrsToValidate(attributes),
+          errors = this.errors = Validator.validate(attrs, validation, this);
 
-        if (_.isArray(attrs) || _.isString(attrs)) {
-          attrs = pickAll(this.attributes, attrs);
-        } else if (!attrs) {
-          var all = _.extend({}, this.attributes, validation);
-          attrs = pickAll(this.attributes, _.keys(all));
-        }
-
-        var errors = this.errors = Validator.validate(attrs, validation, this);
         options = options || {};
 
         if (!options.silent) {
@@ -228,13 +222,25 @@
       /**
        * Checks if model is valid
        *
-       * @param {Object} [attrs] - optional list of attributes to validate
+       * @param {Object} [attributes] - optional list of attributes to validate
        * @param {Object} [options] - standard Backbone.Model's options list
        * @return {boolean}
        */
-      isValid: function(attrs, options) {
-        attrs = attrs && attrs.length ? _.pick(this.attributes, attrs) : null;
-        return !this.validate(attrs, options);
+      isValid: function(attributes, options) {
+        return !(this.validate && this.validate(this._getAttrsToValidate(attributes), options));
+      },
+
+      _getAttrsToValidate: function(attrs) {
+        var attributes, all;
+
+        if (_.isArray(attrs) || _.isString(attrs)) {
+          attributes = pickAll(this.attributes, attrs);
+        } else if (!attrs) {
+          all = _.extend({}, this.attributes, this.validation || {});
+          attributes = pickAll(this.attributes, _.keys(all));
+        }
+
+        return attributes;
       }
     }
   };
