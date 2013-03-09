@@ -30,14 +30,33 @@
       var errors = {};
       _.chain(attrs).each(function(attrValue, attrName) {
         var validation = validations[attrName];
-        var error = this._validateByEntries(validation, attrValue, context);
+        var error = this._validateAll(validation, attrValue, context);
 
-        if (error) {
-          (errors[attrName] = error);
+        if (error.length) {
+          (errors[attrName] = _.uniq(error));
         }
       }, this);
 
       return _.size(errors) ? errors : null;
+    },
+
+    _validateAll: function(validations, attrValue, context) {
+      return _.inject(_.flatten([validations || []]), function(errors, validation) {
+        _.chain(validation).omit('message').each(function(attrExpectation, validatorName) {
+          var validator = this._validators[validatorName];
+
+          if (!validator) {
+            throw new Error('Missed validator: ' + validatorName);
+          }
+
+          var result = validator.fn.apply(context || this, [attrValue, attrExpectation]);
+          if (result !== true) {
+            errors.push(validation.message || validator.message || result || 'Invalid');
+          }
+        }, this);
+
+        return errors;
+      }, [], this);
     },
 
     /**
@@ -70,80 +89,6 @@
      * @property _validators
      */
     _validators: {
-    },
-
-    /**
-     * Validator single value against validations config (or array of configs)
-     *
-     * @param {Object|Array} validations - validations config or array of configs
-     * @param {*} attrValue - attribute value to validate
-     * @param {Object} [context] - validator execution context
-     * @return {*} null if validation passed, errors array if not
-     * @private
-     */
-    _validateByEntries: function(validations, attrValue, context) {
-      var errors = [];
-
-      _.chain([validations || []]).flatten().each(function(validation) {
-        var error = this._validateByEntry(validation, attrValue, context);
-
-        if (error) {
-          errors.push(error);
-        }
-      }, this);
-
-      return errors.length ? _.uniq(_.flatten(errors)) : null;
-    },
-
-    /**
-     * Validator single value against validations config (or array of configs)
-     *
-     * @param {Object} validation - validations config
-     * @param {*} attrValue - attribute value to validate
-     * @param {Object} [context] - validator execution context
-     * @return {*} null if validation passed, errors array if not
-     * @private
-     */
-    _validateByEntry: function(validation, attrValue, context) {
-      var message = validation.message,
-        errors = [];
-
-      _.chain(validation).omit('message').each(function(attrExpectation, validatorName) {
-        var error = this._validateByName(validatorName, attrValue, attrExpectation, message, context);
-
-        if (error) {
-          errors.push(error);
-        }
-      }, this);
-
-      return errors.length ? _.uniq(errors) : null;
-    },
-
-    /**
-     * Validators passed value by validator name and its expected value. Can use custom error message,
-     * otherwise will retrieve to validator standard error message or just "Invalid" as default.
-     *
-     * Everything except `true` from validator will be treated as validation failure.
-     *
-     * @param {String} validatorName - validator name from `_validators` collection
-     * @param {*} attrValue - value to check
-     * @param {*} attrExpectation - expected result
-     * @param {String} [errorMessage] - custom error message
-     * @param {Object} [context] - validator execution context
-     * @return {null|String|Object|Array}
-     * @private
-     */
-    _validateByName: function(validatorName, attrValue, attrExpectation, errorMessage, context) {
-      var validator = this._validators[validatorName];
-
-      if (!validator) {
-        throw new Error('Invalid validator name: ' + validatorName);
-      }
-
-      var result = validator.fn.apply(context, [attrValue, attrExpectation]);
-      errorMessage = errorMessage || validator.message || 'Invalid';
-
-      return result ? (result === true ? null : result) : errorMessage;
     }
   };
 
@@ -202,7 +147,7 @@
        */
       validate: function(attributes, options) {
         var validation = this.validation || {},
-          attrs = this._getAttrsToValidate(attributes),
+          attrs = this._getAttributesToValidate(attributes),
           errors = this.errors = Validator.validate(attrs, validation, this);
 
         options = options || {};
@@ -212,6 +157,15 @@
         }
 
         return options && options.suppress ? null : errors;
+      },
+
+      _validate: function(attrs, options) {
+        if (!options.validate || !this.validate) return true;
+        attrs = this._getAttributesToValidate(attrs);
+        var error = this.validationError = this.validate(attrs, options) || null;
+        if (!error) return true;
+        this.trigger('invalid', this, error, options || {});
+        return false;
       },
 
       triggerValidated: function(attrs, errors) {
@@ -227,32 +181,35 @@
        * @return {boolean}
        */
       isValid: function(attributes, options) {
-        return !(this.validate && this.validate(this._getAttrsToValidate(attributes), options));
+        var attrs = this._getAttributesToValidate(attributes);
+        return !this.validate || !this.validate(attrs, options);
       },
 
-      _getAttrsToValidate: function(attrs) {
-        var attributes, all;
+      _getAttributesToValidate: function(attributes) {
+        var attrs, all;
 
-        if (_.isArray(attrs) || _.isString(attrs)) {
-          attributes = pickAll(this.attributes, attrs);
-        } else if (!attrs) {
+        if (_.isArray(attributes) || _.isString(attributes)) {
+          attrs = pick(this.attributes, attributes);
+        } else if (!attributes) {
           all = _.extend({}, this.attributes, this.validation || {});
-          attributes = pickAll(this.attributes, _.keys(all));
+          attrs = pick(this.attributes, _.keys(all));
+        } else {
+          attrs = attributes;
         }
 
-        return attributes;
+        return attrs;
       }
     }
   };
 
   /**
-   * Alternative to _.pick() - but will also pick undefined/null/false values
+   * Alternative to _.pick() - but also picks undefined/null/false values
    *
    * @param {Object} object - source hash
    * @param {Array} keys - needed keys to pick
    * @return {Object}
    */
-  var pickAll = function(object, keys) {
+  var pick = function(object, keys) {
     return _.inject(_.flatten([keys]), function(memo, key) {
       memo[key] = object[key];
       return memo;
@@ -325,7 +282,7 @@
           url: /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
         };
 
-        return _.isString(value) && !!value.match(patterns[expectation] || expectation);
+        return !value || !!value.match(patterns[expectation] || expectation);
       }
     },
     {
