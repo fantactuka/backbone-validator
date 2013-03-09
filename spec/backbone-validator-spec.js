@@ -12,22 +12,17 @@ describe('Backbone.Validator', function() {
   Validator.apply();
 
   describe('#validators', function() {
-    var pp = function(value) {
-      var str = jasmine.pp(value);
-      return str.length > 100 ? str.substr(0, 100) + '...' : str;
-    };
-
     var expectToFail = function(validatorName, value, expectation, errorMessage) {
       var validations = { attr: {} };
       validations.attr[validatorName] = expectation;
 
-      it('fails with ' + pp(value) + ' and returns ' + pp(errorMessage), function() {
+      it('fails with ' + jasmine.pp(value) + ' and returns ' + jasmine.pp(errorMessage), function() {
         expect(Validator.validate({attr: value}, validations).attr[0]).toBeDefined();
       });
     };
 
     var expectToPass = function(validatorName, value, expectation) {
-      it('passes with ' + pp(value), function() {
+      it('passes with ' + jasmine.pp(value), function() {
         var validations = { attr: {} };
         validations.attr[validatorName] = expectation;
         expect(Validator.validate({attr: value}, validations)).toEqual(null);
