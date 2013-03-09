@@ -11,6 +11,144 @@ describe('Backbone.Validator', function() {
 
   Validator.apply();
 
+  describe('#validators', function() {
+    var pp = function(value) {
+      var str = jasmine.pp(value);
+      return str.length > 100 ? str.substr(0, 100) + '...' : str;
+    };
+
+    var expectToFail = function(validatorName, value, expectation, errorMessage) {
+      var validations = { attr: {} };
+      validations.attr[validatorName] = expectation;
+
+      it('fails with ' + pp(value) + ' and returns ' + pp(errorMessage), function() {
+        expect(Validator.validate({attr: value}, validations).attr[0]).toBeDefined();
+      });
+    };
+
+    var expectToPass = function(validatorName, value, expectation) {
+      it('passes with ' + pp(value), function() {
+        var validations = { attr: {} };
+        validations.attr[validatorName] = expectation;
+        expect(Validator.validate({attr: value}, validations)).toEqual(null);
+      });
+    };
+
+    describe('add', function() {
+      beforeEach(function() {
+        spy = jasmine.createSpy('validator');
+        Validator.addValidator('custom', spy);
+      });
+
+      it('passes expected value', function() {
+        model = create(Backbone.Model, {
+          validation: {
+            field_1: {
+              custom: 10
+            }
+          }
+        });
+
+        model.set({field_1: 1}, {validate: true});
+        expect(spy).toHaveBeenCalledWith(1, 10);
+      });
+    });
+
+    describe('required', function() {
+      expectToPass('required', 'Hello', true);
+      expectToPass('required', true, true);
+      expectToPass('required', 1, true);
+      expectToFail('required', false, true);
+      expectToFail('required', '', true);
+      expectToFail('required', null, true);
+      expectToFail('required', undefined, true);
+    });
+
+    describe('minLength', function() {
+      expectToPass('minLength', 'Sam', 3);
+      expectToFail('minLength', 'S', 3);
+    });
+
+    describe('maxLength', function() {
+      expectToPass('maxLength', 'Sam', 3);
+      expectToFail('maxLength', 'Samuel', 3);
+    });
+
+    describe('fn', function() {
+      expectToPass('fn', 'Sam', function(value) {
+        return value.length === 3;
+      });
+
+      expectToFail('fn', 'Samuel', function(value) {
+        return value.length === 3;
+      });
+
+      expectToFail('fn', 'Samuel', function(value) {
+        return value.length === 3 ? null : 'custom message';
+      }, 'custom message');
+    });
+
+    describe('format', function() {
+      expectToPass('format', 'a_b_c', /^([abc_]*)$/);
+      expectToFail('format', 'a_b_c_d', /^([abc_]*)$/);
+
+      expectToPass('format', '', 'email');
+      expectToPass('format', 'user@example.com', 'email');
+      expectToFail('format', 'user_example.com', 'email');
+
+      expectToPass('format', 'http://example.com', 'url');
+      expectToFail('format', 'http_example_com', 'url');
+
+      expectToPass('format', '1234', 'digits');
+      expectToFail('format', '1234a', 'digits');
+
+      expectToPass('format', '123.789', 'number');
+      expectToFail('format', '123.789a', 'number');
+    });
+
+    describe('collection', function() {
+      var User = Backbone.Model.extend({
+        validation: {
+          name: {
+            required: true
+          }
+        }
+      });
+
+      var Users = Backbone.Collection.extend({ model: User });
+
+      expectToPass('collection', new Users([
+        { name: 'Sam' },
+        { name: 'Tom' },
+        { name: 'Dan' }
+      ]));
+
+      expectToFail('collection', new Users([
+        { name: 'Sam' },
+        { name: '' },
+        { name: '' }
+      ]), true, [
+        [1, { name: ['Is required'] }],
+        [2, { name: ['Is required'] }]
+      ]);
+
+      expectToPass('collection', [
+        new User({ name: 'Sam' }),
+        new User({ name: 'Tom' }),
+        new User({ name: 'Dan' })
+      ]);
+
+      expectToFail('collection', [
+        new User({ name: 'Sam' }),
+        new User({ name: '' }),
+        new User({ name: '' })
+      ], true, [
+        [1, { name: ['Is required'] }],
+        [2, { name: ['Is required'] }]
+      ]);
+    });
+  });
+
   describe('Model', function() {
     beforeEach(function() {
       model = create(Backbone.Model, {
@@ -117,136 +255,117 @@ describe('Backbone.Validator', function() {
     });
   });
 
-  describe('#addValidator', function() {
-    beforeEach(function() {
-      spy = jasmine.createSpy('validator');
-      Validator.addValidator('custom', spy);
-    });
+  describe('View', function() {
+    var valid, invalid;
 
-    it('passes expected value', function() {
+    beforeEach(function() {
+      valid = jasmine.createSpy('valid');
+      invalid = jasmine.createSpy('invalid');
+
       model = create(Backbone.Model, {
         validation: {
-          field_1: {
-            custom: 10
-          }
-        }
-      });
+          email: {
+            format: 'email',
+            message: 'Invalid email'
+          },
 
-      model.set({field_1: 1}, {validate: true});
-      expect(spy).toHaveBeenCalledWith(1, 10);
-    });
-  });
-
-  describe('validators', function() {
-    var expectToFail = function(validatorName, value, expectation, errorMessage) {
-      var validations = { attr: {} };
-      validations.attr[validatorName] = expectation;
-
-      it('fails with ' + jasmine.pp(value) + ' and returns ' + errorMessage, function() {
-        expect(Validator.validate({attr: value}, validations).attr[0]).toBeDefined();
-      });
-    };
-
-    var expectToPass = function(validatorName, value, expectation) {
-      it('passes with ' + jasmine.pp(value), function() {
-        var validations = { attr: {} };
-        validations.attr[validatorName] = expectation;
-        expect(Validator.validate({attr: value}, validations)).toEqual(null);
-      });
-    };
-
-    describe('required', function() {
-      expectToPass('required', 'Hello', true);
-      expectToPass('required', true, true);
-      expectToPass('required', 1, true);
-      expectToFail('required', false, true);
-      expectToFail('required', '', true);
-      expectToFail('required', null, true);
-      expectToFail('required', undefined, true);
-    });
-
-    describe('minLength', function() {
-      expectToPass('minLength', 'Sam', 3);
-      expectToFail('minLength', 'S', 3);
-    });
-
-    describe('maxLength', function() {
-      expectToPass('maxLength', 'Sam', 3);
-      expectToFail('maxLength', 'Samuel', 3);
-    });
-
-    describe('fn', function() {
-      expectToPass('fn', 'Sam', function(value) {
-        return value.length === 3;
-      });
-
-      expectToFail('fn', 'Samuel', function(value) {
-        return value.length === 3;
-      });
-
-      expectToFail('fn', 'Samuel', function(value) {
-        return value.length === 3 ? null : 'custom message';
-      }, 'custom message');
-    });
-
-    describe('format', function() {
-      expectToPass('format', 'a_b_c', /^([abc_]*)$/);
-      expectToFail('format', 'a_b_c_d', /^([abc_]*)$/);
-
-      expectToPass('format', '', 'email');
-      expectToPass('format', 'user@example.com', 'email');
-      expectToFail('format', 'user_example.com', 'email');
-
-      expectToPass('format', 'http://example.com', 'url');
-      expectToFail('format', 'http_example_com', 'url');
-
-      expectToPass('format', '1234', 'digits');
-      expectToFail('format', '1234a', 'digits');
-
-      expectToPass('format', '123.789', 'number');
-      expectToFail('format', '123.789a', 'number');
-    });
-
-    describe('collection', function() {
-      var User = Backbone.Model.extend({
-        validation: {
           name: {
-            required: true
+            minLength: 4
           }
         }
       });
 
-      var Users = Backbone.Collection.extend({ model: User });
+      view = create(Backbone.View, {
+        model: model
+      });
 
-      expectToPass('collection', new Users([
-        { name: 'Sam' },
-        { name: 'Tom' },
-        { name: 'Dan' }
-      ]));
+      jasmine.Clock.useMock();
+    });
 
-      expectToFail('collection', new Users([
-        { name: 'Sam' },
-        { name: '' },
-        { name: '' }
-      ]), true, [
-        [1, { name: ['Is required'] }],
-        [2, { name: ['Is required'] }]
-      ]);
+    afterEach(function() {
+      view.remove();
+    });
 
-      expectToPass('collection', [
-        new User({ name: 'Sam' }),
-        new User({ name: 'Tom' }),
-        new User({ name: 'Dan' })
-      ]);
+    it('raises error if model does not exist', function() {
+      view.model = null;
+      expect(function() {
+        view.bindValidation();
+      }).toThrow('Model is not provided');
+    });
 
-      expectToFail('collection', [
-        new User({ name: 'Sam' }),
-        new User({ name: '' }),
-        new User({ name: '' })
-      ], true, [
-        [1, { name: ['Is required'] }],
-        [2, { name: ['Is required'] }]
-      ]);
+    describe('when validating model', function() {
+      var expectBinding = function(setup) {
+        setup();
+
+        model.validate({ email: 'user_example_com', name: 'Valid name' });
+        jasmine.Clock.tick(50);
+
+        expect(valid).toHaveBeenCalledWith('name', 'Valid name', model);
+        expect(invalid).toHaveBeenCalledWith('email', 'user_example_com', ['Invalid email'], model);
+      };
+
+      it('runs callbacks from options if specified', function() {
+        expectBinding(function() {
+          view.bindValidation(model, {
+            onValidField: valid,
+            onInvalidField: invalid
+          });
+        });
+      });
+
+      it('runs callbacks from view instance if specified', function() {
+        expectBinding(function() {
+          view.bindValidation(model);
+          _.extend(view, {
+            onValidField: valid,
+            onInvalidField: invalid
+          });
+        });
+      });
+
+      it('runs callbacks fallback from Backbone.Validator.ViewCallbacks', function() {
+        expectBinding(function() {
+          view.bindValidation(model);
+          Validator.ViewCallbacks = {
+            onValidField: valid,
+            onInvalidField: invalid
+          };
+        });
+      });
+    });
+
+    describe('when view removed', function() {
+      it('unbinds `validated` events', function() {
+        view.bindValidation(model, {
+          onValidField: valid,
+          onInvalidField: invalid
+
+        });
+
+        view.remove();
+        model.validate();
+        jasmine.Clock.tick(50);
+
+        expect(valid).not.toHaveBeenCalled();
+        expect(invalid).not.toHaveBeenCalled();
+      });
+
+      it('unbinds only `validated` event', function() {
+        spy = jasmine.createSpy('spy');
+        model.on('validated', spy);
+        view.bindValidation(model, {
+          onValidField: valid,
+          onInvalidField: invalid
+        });
+        view.remove();
+
+        model.validate({ email: 'user@example.com' });
+        jasmine.Clock.tick(50);
+
+        expect(spy).toHaveBeenCalled();
+        expect(valid).not.toHaveBeenCalled();
+        expect(invalid).not.toHaveBeenCalled();
+      });
     });
   });
 });
