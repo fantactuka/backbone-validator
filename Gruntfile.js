@@ -33,5 +33,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('test', ['jshint', 'jasmine', 'qunit']);
-  grunt.registerTask('default', ['test']);
+  grunt.registerTask('default', ['test', 'uglify']);
 };
