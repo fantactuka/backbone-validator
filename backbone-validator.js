@@ -4,9 +4,6 @@
  * Adds decoupled validator functionality that could be bound to model and view, as well as
  * validated plain hashes with built-in or custom validators
  *
- * TODO:
- * grunt/bower/travis
- *
  * @author Maksim Horbachevsky
  */
 
@@ -147,7 +144,7 @@
        */
       validate: function(attributes, options) {
         var validation = this.validation || {},
-          attrs = this._getAttributesToValidate(attributes),
+          attrs = getAttrsToValidate(attributes, this.attributes, this.validation),
           errors = this.errors = Validator.validate(attrs, validation, this);
 
         options = options || {};
@@ -159,18 +156,27 @@
         return options && options.suppress ? null : errors;
       },
 
+      /**
+       * Override Backbone's method to pass properly fetched attributes list
+       * @private
+       */
       _validate: function(attrs, options) {
         if (!options.validate || !this.validate) return true;
-        attrs = this._getAttributesToValidate(attrs);
+        attrs = getAttrsToValidate(attrs, this.attributes, this.validation);
         var error = this.validationError = this.validate(attrs, options) || null;
         if (!error) return true;
         this.trigger('invalid', this, error, options || {});
         return false;
       },
 
+      /**
+       * Triggering validation results (invalid/valid) with errors list if nay
+       * @param {Object} attrs - validated attributes
+       * @param {Object|null} errors
+       */
       triggerValidated: function(attrs, errors) {
         this.trigger('validated', this, attrs, errors);
-        this.trigger('validated:' + (errors ? 'invalid' : 'valid'), this, attrs, this.errors);
+        this.trigger('validated:' + (errors ? 'invalid' : 'valid'), this, attrs, errors);
       },
 
       /**
@@ -181,23 +187,8 @@
        * @return {boolean}
        */
       isValid: function(attributes, options) {
-        var attrs = this._getAttributesToValidate(attributes);
+        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation);
         return !this.validate || !this.validate(attrs, options);
-      },
-
-      _getAttributesToValidate: function(attributes) {
-        var attrs, all;
-
-        if (_.isArray(attributes) || _.isString(attributes)) {
-          attrs = pick(this.attributes, attributes);
-        } else if (!attributes) {
-          all = _.extend({}, this.attributes, this.validation || {});
-          attrs = pick(this.attributes, _.keys(all));
-        } else {
-          attrs = attributes;
-        }
-
-        return attrs;
       }
     }
   };
@@ -216,6 +207,24 @@
     }, {});
   };
 
+  /**
+   * Fetching attributes to validate
+   * @return {*}
+   */
+  var getAttrsToValidate = function(passedAttrs, modelAttrs, validationAttrs) {
+    var attrs, all;
+
+    if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
+      attrs = pick(modelAttrs, passedAttrs);
+    } else if (!passedAttrs) {
+      all = _.extend({}, modelAttrs, validationAttrs || {});
+      attrs = pick(modelAttrs, _.keys(all));
+    } else {
+      attrs = passedAttrs;
+    }
+
+    return attrs;
+  };
 
   Validator.ViewCallbacks = {
     onValidField: function(name /*, value, model*/) {
@@ -231,6 +240,10 @@
     }
   };
 
+  /**
+   * Built-in validators
+   * @type {Array}
+   */
   var validators = [
     {
       name: 'required',
