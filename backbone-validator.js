@@ -30,7 +30,7 @@
         var error = this._validateAll(validation, attrValue, context);
 
         if (error.length) {
-          (errors[attrName] = _.uniq(error));
+          errors[attrName] = _.uniq(error);
         }
       }, this);
 
@@ -145,7 +145,7 @@
       validate: function(attributes, options) {
         var validation = this.validation || {},
           attrs = getAttrsToValidate(attributes, this.attributes, this.validation),
-          errors = this.errors = Validator.validate(attrs, validation, this);
+          errors = Validator.validate(attrs, validation, this);
 
         options = options || {};
 
@@ -164,9 +164,12 @@
         if (!options.validate || !this.validate) return true;
         attrs = getAttrsToValidate(attrs, this.attributes, this.validation);
         var error = this.validationError = this.validate(attrs, options) || null;
-        if (!error) return true;
-        this.trigger('invalid', this, error, options || {});
-        return false;
+
+        if (error) {
+          this.trigger('invalid', this, error, options || {});
+        }
+
+        return !error;
       },
 
       /**
