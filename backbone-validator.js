@@ -115,16 +115,16 @@
         }
 
         this.listenTo(model, 'validated', _.bind(function(model, attributes, errors) {
-          options = _.extend({}, Validator.ViewCallbacks, _.pick(this, 'onInvalidField', 'onValidField'), options);
+          var callbacks = _.extend({}, Validator.ViewCallbacks, _.pick(this, 'onInvalidField', 'onValidField'), options);
           errors = errors || {};
 
           _.each(attributes, function(value, name) {
             var attrErrors = errors[name];
 
             if (attrErrors && attrErrors.length) {
-              options.onInvalidField.call(this, name, value, attrErrors, model);
+              callbacks.onInvalidField.call(this, name, value, attrErrors, model);
             } else {
-              options.onValidField.call(this, name, value, model);
+              callbacks.onValidField.call(this, name, value, model);
             }
           }, this);
         }, this));
