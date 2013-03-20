@@ -13,7 +13,7 @@
 
   var Validator = Backbone.Validator = {
 
-    version: '0.0.1',
+    version: '0.1.0',
 
     /**
      * General validation method that gets attributes list and validations config and runs them all
@@ -231,15 +231,17 @@
 
   Validator.ViewCallbacks = {
     onValidField: function(name /*, value, model*/) {
-      this.$('input[name="' + name + '"]')
-        .removeClass('error')
-        .removeAttr('data-error');
+      var input = this.$('input[name="' + name + '"]');
+
+      input.removeClass('error');
+      input.next('.error-text').remove();
     },
 
     onInvalidField: function(name, value, errors /*, model*/) {
-      this.$('input[name="' + name + '"]')
-        .addClass('error')
-        .attr('data-error', errors.join(', '));
+      var input = this.$('input[name="' + name + '"]');
+
+      input.next('.error-text').remove();
+      input.addClass('error').after('<div class="error-text">' + errors.join(', ') + '</div>');
     }
   };
 
