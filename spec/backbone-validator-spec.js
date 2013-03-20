@@ -30,7 +30,7 @@ describe('Backbone.Validator', function() {
     describe('add', function() {
       beforeEach(function() {
         spy = jasmine.createSpy('validator');
-        Validator.addValidator('custom', spy);
+        Validator.add('custom', spy);
       });
 
       it('passes expected value', function() {

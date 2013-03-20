@@ -66,13 +66,8 @@
      * @param {String} validatorName - validator name
      * @param {Function} validatorFn - validation function
      * @param {String} [errorMessage] - error message
-     * @param {Boolean} [forceOverride] - won't raise error if validator already exists
      */
-    addValidator: function(validatorName, validatorFn, errorMessage, forceOverride) {
-      if (this._validators[validatorName] && !forceOverride) {
-        throw new Error('Validator "' + validatorName + '" already exists');
-      }
-
+    add: function(validatorName, validatorFn, errorMessage) {
       this._validators[validatorName] = {
         fn: validatorFn,
         message: errorMessage
@@ -312,7 +307,7 @@
   ];
 
   _.each(validators, function(validator) {
-    Validator.addValidator(validator.name, validator.fn, validator.message);
+    Validator.add(validator.name, validator.fn, validator.message);
   });
 
 
