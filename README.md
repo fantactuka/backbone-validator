@@ -35,8 +35,7 @@ var User = Backbone.Model.extend({
 
 var user = new User();
 ```
-
-### Setting attributes
+Setting attributes
 ```js
 user.set({ email: 'wrong_format_email', phone: 'wrong_format_and_also_very_long' }, { validate: true }); 
 // Attributes won't be set, since validation failed. Validation errors are stored
@@ -46,8 +45,7 @@ user.set({ email: 'wrong_format_email', phone: 'wrong_format_and_also_very_long'
 
 user.validationError; // => { email: ['Does not match format'], phone: ['Does not match format', 'Too long'] };
 ```
-
-### Saving model
+Saving model
 ```js
 user.save(); 
 // Validation triggered automatically. If nothing passed, it will validate entire model.
@@ -55,14 +53,12 @@ user.save();
 user.save({ email: 'user@example.com' }); 
 // Validation triggered automatically. Validates only email.
 ```
-
-### Checking model validity
+Checking model validity
 ```js
 // Model#isValidreturns boolean depending on model validity
 user.isValid();                   // Will check all attributes
 user.isValid(['email', 'name']);  // Will check specific attributes
 user.isValid('email');            // Will check specific attribute
-
 
 // Model#validate returns null if model is valid (no errors), or errors object if any validation failed
 user.validate();                   // Will check all attributes
@@ -112,6 +108,58 @@ bindValidation(this.model, {
   onInvalidField: function() { ... }
 });
 ```
+## Built-in validators
+
+* `required` - just checks value validity with `!!`
+* `collection` - runs validation for models collection/array and returns indexed error object
+* `minLength`
+* `maxLength`
+* `fn` - function that receives attribute value and returns true if it's valid, or false/error message if not
+* `format` - pattern matching. **Please note:** format does not require field to exist. E.g. phone number could be optional, but match format if it is not empty. So in case you need to check field existance as well - use `required` validator
+  * `email`
+  * `numeric`
+  * `email`
+  * `url`
+
+Usage examples:
+```js
+var User = Backbone.Model.extend({
+  validation: {
+    name: {
+      required: true,
+      minLength: 2,
+      maxLength: 20,
+      fn: function(value) {
+        return ~valie.indexOf('a') ? 'Name should have at least one "a" letter' : true;
+      }
+    },
+    
+    phone: {
+      format: 'numeric'
+    },
+    
+    documents: {
+      collection: true
+    }
+  }
+});
+
+```
+
+
+## Adding validator
+```js
+Backbone.Validator.add('myCubicValidator', function(value, expectation) {
+  return value * value === expectation;
+}, 'Default error message');
+```
+Validation method could return true/false as well as error message or array of messages which will be treated as validation vailure:
+```js
+Backbone.Validator.add('myCustomValidator', function(value, expectation) {
+  return value === expectation ? true : 'Value does not match expectation. Should be ' + expectation;
+});
+```
+
 
 ## Standalone validator
 In fact you can utilize validator for plain objects, so you can do something like this:
@@ -130,18 +178,5 @@ var validations = {
 };
 
 Backbone.Validator.validate({ name: '', email: '' }, validations); // -> { name: ['Name is required'], email: ['Does not match format'] }
-```
-
-## Adding validator
-```js
-Backbone.Validator.add('myCubicValidator', function(value, expectation) {
-  return value * value === expectation;
-}, 'Default error message');
-```
-Validation method could return true/false as well as error message or array of messages which will be treated as validation vailure:
-```js
-Backbone.Validator.add('myCustomValidator', function(value, expectation) {
-  return value === expectation ? true : 'Value does not match expectation. Should be ' + expectation;
-});
 ```
 
