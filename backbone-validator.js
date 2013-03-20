@@ -315,18 +315,10 @@
     Validator.addValidator(validator.name, validator.fn, validator.message);
   });
 
-  Validator.apply = function(options) {
-    var config = _.extend({
-      model: Backbone.Model,
-      view: Backbone.View
-    }, options || {});
 
-    if (config.model) {
-      _.extend(config.model.prototype, Validator.Extensions.Model);
-    }
-
-    if (config.view) {
-      _.extend(config.view.prototype, Validator.Extensions.View);
-    }
-  };
+  /**
+   * Applying validator functionality to backbone's core
+   */
+  _.extend(Backbone.Model.prototype, Validator.Extensions.Model);
+  _.extend(Backbone.View.prototype, Validator.Extensions.View);
 })(Backbone, _);

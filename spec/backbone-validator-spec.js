@@ -9,8 +9,6 @@ describe('Backbone.Validator', function() {
     return new Model(instanceOpts || {});
   };
 
-  Validator.apply();
-
   describe('#validators', function() {
     var expectToFail = function(validatorName, value, expectation, errorMessage) {
       var validations = { attr: {} };
