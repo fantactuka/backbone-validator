@@ -153,7 +153,7 @@ var User = Backbone.Model.extend({
 
 ## Adding validator
 ```js
-Backbone.Validator.add('myCubicValidator', function(value, expectation) {
+Backbone.Validator.add('myCustomValidator', function(value, expectation) {
   return value * value === expectation;
 }, 'Default error message');
 ```
