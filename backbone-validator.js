@@ -7,7 +7,15 @@
  * @author Maksim Horbachevsky
  */
 
-(function(Backbone, _) {
+(function(factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['backbone', 'underscore'], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('backbone'), require('underscore'));
+  } else {
+    factory(window.Backbone, window._);
+  }
+})(function(Backbone, _) {
 
   'use strict';
 
@@ -316,4 +324,6 @@
    */
   _.extend(Backbone.Model.prototype, Validator.Extensions.Model);
   _.extend(Backbone.View.prototype, Validator.Extensions.View);
-})(Backbone, _);
+
+  return Validator;
+});
