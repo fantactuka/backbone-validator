@@ -23,6 +23,10 @@ var User = Backbone.Model.extend({
       message: 'Does not match format'
     },
     
+    books: {
+      collection: true
+    },
+    
     phone: [{
       format: 'number',
       message: 'Does not match format'
@@ -149,7 +153,7 @@ var User = Backbone.Model.extend({
 
 ## Adding validator
 ```js
-Backbone.Validator.add('myCubicValidator', function(value, expectation) {
+Backbone.Validator.add('myCustomValidator', function(value, expectation) {
   return value * value === expectation;
 }, 'Default error message');
 ```
