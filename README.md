@@ -23,6 +23,10 @@ var User = Backbone.Model.extend({
       message: 'Does not match format'
     },
     
+    books: {
+      collection: true
+    },
+    
     phone: [{
       format: 'number',
       message: 'Does not match format'
