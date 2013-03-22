@@ -117,7 +117,7 @@
           throw 'Model is not provided';
         }
 
-        this.listenTo(model, 'validated', _.bind(function(model, attributes, errors) {
+        this.listenTo(model, 'validated', function(model, attributes, errors) {
           var callbacks = _.extend({}, Validator.ViewCallbacks, _.pick(this, 'onInvalidField', 'onValidField'), options);
           errors = errors || {};
 
@@ -130,7 +130,7 @@
               callbacks.onValidField.call(this, name, value, model);
             }
           }, this);
-        }, this));
+        });
       }
     },
 
