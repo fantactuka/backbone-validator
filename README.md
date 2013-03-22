@@ -119,11 +119,12 @@ bindValidation(this.model, {
 * `minLength`
 * `maxLength`
 * `fn` - function that receives attribute value and returns true if it's valid, or false/error message if not
-* `format` - pattern matching. **Please note:** format does not require field to exist. E.g. phone number could be optional, but should match format if it is not empty. So in case you need to check field existance as well - use `required` validator. It's possible to add custom formats via `Backbone.Validator.formats.phone = /(\d){3,4}-(\d){3,4}-(\d){3,4}/`
+* `format` - pattern matching. **Please note:** format does not require field to exist. E.g. phone number could be optional, but should match format if it is not empty. So in case you need to check field existance as well - use `required` validator.
   * `email`
   * `numeric`
   * `email`
   * `url`
+  * It's possible to add custom formats via `Backbone.Validator.formats.phone = /(\d){3,4}-(\d){3,4}-(\d){3,4}/;`
 
 Usage examples:
 ```js
