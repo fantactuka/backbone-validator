@@ -1,10 +1,13 @@
-backbone-validator [![Build Status](https://travis-ci.org/fantactuka/backbone-validator.png?branch=master)](https://travis-ci.org/fantactuka/backbone-validator)
+backbone-validator v0.1.1 [![Build Status](https://travis-ci.org/fantactuka/backbone-validator.png?branch=master)](https://travis-ci.org/fantactuka/backbone-validator)
 ==================
 
 Backbone model validator allows you to define validation rules for model and utilize it for model-standalone validation or bind its events to the view so you can display errors if needed. Inspired by @thedersen's backbone-validation
 
 # Installation
 Using [Bower](http://twitter.github.com/bower/) `bower install backbone-validator` or just copy [backbone-validator.js](https://raw.github.com/fantactuka/backbone-validator/master/backbone-validator.js)
+
+# Examples
+* **[JSFiddle](http://jsfiddle.net/fantactuka/6zh5y/)**: Data binding & model validation (with nested attributes) example using [Backbone.Validator](https://github.com/fantactuka/backbone-validator) + [Backbone.Ext](https://github.com/fantactuka/backbone-ext) + [Backbone.Stickit](https://github.com/nytimes/backbone.stickit)
 
 # Usage
 ## Model
@@ -119,11 +122,12 @@ bindValidation(this.model, {
 * `minLength`
 * `maxLength`
 * `fn` - function that receives attribute value and returns true if it's valid, or false/error message if not
-* `format` - pattern matching. **Please note:** format does not require field to exist. E.g. phone number could be optional, but should match format if it is not empty. So in case you need to check field existance as well - use `required` validator. It's possible to add custom formats via `Backbone.Validator.formats.phone = /(\d){3,4}-(\d){3,4}-(\d){3,4}/`
+* `format` - pattern matching. **Please note:** format does not require field to exist. E.g. phone number could be optional, but should match format if it is not empty. So in case you need to check field existance as well - use `required` validator.
   * `email`
   * `numeric`
   * `email`
   * `url`
+  * It's possible to add custom formats via `Backbone.Validator.formats.phone = /(\d){3,4}-(\d){3,4}-(\d){3,4}/;`
 
 Usage examples:
 ```js
