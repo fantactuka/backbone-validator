@@ -14,22 +14,14 @@
   </head>
   <body>
     <div class="wrapper">
-      <header>
-        <h1>Backbone-validator</h1>
-        <p>Backbone model-view validator</p>
-
-        <p class="view"><a href="https://github.com/fantactuka/backbone-validator">View the Project on GitHub <small>fantactuka/backbone-validator</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/fantactuka/backbone-validator/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/fantactuka/backbone-validator/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/fantactuka/backbone-validator">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
       <section>
-        <h1>backbone-validator v0.1.1 <a href="https://travis-ci.org/fantactuka/backbone-validator"><img src="https://travis-ci.org/fantactuka/backbone-validator.png?branch=master" alt="Build Status"></a>
+<h1>
+  Backbone-validator <a href="https://travis-ci.org/fantactuka/backbone-validator"><img src="https://travis-ci.org/fantactuka/backbone-validator.png?branch=master" alt="Build Status"></a>
 </h1>
+
+<p>
+  <a href="https://github.com/fantactuka/backbone-validator">View On <strong>GitHub</strong></a>
+</p>
 
 <p>Backbone model validator allows you to define validation rules for model and utilize it for model-standalone validation or bind its events to the view so you can display errors if needed. Inspired by <a href="https://github.com/thedersen" class="user-mention">@thedersen</a>'s backbone-validation</p>
 
@@ -79,10 +71,10 @@
 
 <p>Setting attributes</p>
 
-<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span> 
+<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
 <span class="c1">// Attributes won't be set, since validation failed. Validation errors are stored</span>
 
-<span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">suppress</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span> 
+<span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">suppress</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
 <span class="c1">// Attributes will be set, but model will trigger its validation events, and store validation errors as for previous case</span>
 
 <span class="nx">user</span><span class="p">.</span><span class="nx">validationError</span><span class="p">;</span> <span class="c1">// =&gt; { email: ['Does not match format'], phone: ['Does not match format', 'Too long'] };</span>
@@ -90,10 +82,10 @@
 
 <p>Saving model</p>
 
-<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span> 
+<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
 <span class="c1">// Validation triggered automatically. If nothing passed, it will validate entire model.</span>
 
-<span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'user@example.com'</span> <span class="p">});</span> 
+<span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'user@example.com'</span> <span class="p">});</span>
 <span class="c1">// Validation triggered automatically. Validates only email.</span>
 </pre></div>
 
@@ -236,12 +228,8 @@
 <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Validator</span><span class="p">.</span><span class="nx">validate</span><span class="p">({</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">''</span><span class="p">,</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">''</span> <span class="p">},</span> <span class="nx">validations</span><span class="p">);</span> <span class="c1">// -&gt; { name: ['Name is required'], email: ['Does not match format'] }</span>
 </pre></div>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/fantactuka">fantactuka</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
