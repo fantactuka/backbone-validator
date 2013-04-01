@@ -163,9 +163,9 @@
        * Override Backbone's method to pass properly fetched attributes list
        * @private
        */
-      _validate: function(attrs, options) {
+      _validate: function(attributes, options) {
         if (!options.validate || !this.validate) return true;
-        attrs = getAttrsToValidate(attrs, this.attributes, this.validation);
+        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation);
         var error = this.validationError = this.validate(attrs, options) || null;
 
         if (error) {
@@ -177,10 +177,11 @@
 
       /**
        * Triggering validation results (invalid/valid) with errors list if nay
-       * @param {Object} attrs - validated attributes
+       * @param {Object} attributes - validated attributes
        * @param {Object|null} errors
        */
-      triggerValidated: function(attrs, errors) {
+      triggerValidated: function(attributes, errors) {
+        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation);
         this.trigger('validated', this, attrs, errors);
         this.trigger('validated:' + (errors ? 'invalid' : 'valid'), this, attrs, errors);
       },
