@@ -42,7 +42,7 @@ var User = Backbone.Model.extend({
 
 var user = new User();
 ```
-*Setting attributes*
+**Setting attributes**
 ```js
 user.set({ email: 'wrong_format_email', phone: 'wrong_format_and_also_very_long' }, { validate: true }); 
 // Attributes won't be set, since validation failed. Validation errors are stored
@@ -52,7 +52,7 @@ user.set({ email: 'wrong_format_email', phone: 'wrong_format_and_also_very_long'
 
 user.validationError; // => { email: ['Does not match format'], phone: ['Does not match format', 'Too long'] };
 ```
-*Saving model*
+**Saving model**
 ```js
 user.save(); 
 // Validation triggered automatically. If nothing passed, it will validate entire model.
@@ -60,7 +60,7 @@ user.save();
 user.save({ email: 'user@example.com' }); 
 // Validation triggered automatically. Validates only email.
 ```
-*Checking model validity*
+**Checking model validity**
 ```js
 // Model#isValidreturns boolean depending on model validity
 user.isValid();                   // Will check all attributes
@@ -72,7 +72,8 @@ user.validate();                   // Will check all attributes
 user.validate(['email', 'name']);  // Will check specific attributes
 user.validate('email');            // Will check specific attribute
 ```
-*Triggering validation events manually*
+**Triggering validation events manually**
+
 Let's say you've sent data to the back-end and it returned server-validation errors (e.g. that email is already taken) and you want to display these errors on UI.
 It could be done by calling `triggerValidated` method that will trigger validation events, listened by the view and it will display errors:
 ```js
