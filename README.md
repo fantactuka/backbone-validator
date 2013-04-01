@@ -81,7 +81,7 @@ user.save(null, {
   success: function(response) {
     if (response.errors) {
       // Errors object should have same format as Backbone.Validator errors:
-      // { <field>: [<error>, <error>, <error>] }
+      // { <attribute>: [<error>, <error>, <error>] }
       //
       // First argument is a list of attributes that will be triggered, second one - errors object
       user.triggerValidated(_.keys(response.errors), response.errors);
@@ -89,9 +89,10 @@ user.save(null, {
   }
 });
 ```
-Another case is when you want to reset validation on the form, and hide any validation error message, then you can run `triggerValidated` without any params, which will indicate that none of model attributes is invalid:
+Another case is when you want to reset validation on the form, and hide any validation error message, then you can run `triggerValidated` without any params, which will indicate (for the view) that none of model attributes is invalid:
 ```js
-user.triggerValidated();
+user.clear();               // Unset attributes
+user.triggerValidated();    // Trigger `validated` events for all attributes passing no errors into it
 ```
 
 
