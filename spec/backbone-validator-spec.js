@@ -246,6 +246,28 @@ describe('Backbone.Validator', function() {
         expect(model.validationError).toBeNull();
       });
     });
+
+    describe('trigger validation', function() {
+      var valid, invalid;
+
+      beforeEach(function() {
+        valid = jasmine.createSpy('valid');
+        invalid = jasmine.createSpy('invalid');
+        model.on('validated:valid', valid);
+        model.on('validated:invalid', invalid);
+      });
+
+      it('filters empty error values', function() {
+        model.triggerValidated(null, { email: [], name: ['Too short'] });
+        expect(invalid.argsForCall[0][2]).toEqual({ name: ['Too short'] });
+      });
+
+      it('fires validated:valid error if all errors are empty', function() {
+        model.triggerValidated(null, { email: [], name: [] });
+        expect(valid).toHaveBeenCalled();
+        expect(invalid).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('View', function() {
