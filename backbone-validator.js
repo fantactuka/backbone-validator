@@ -181,9 +181,11 @@
        * @param {Object|null} errors
        */
       triggerValidated: function(attributes, errors) {
-        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation);
-        this.trigger('validated', this, attrs, errors);
-        this.trigger('validated:' + (errors ? 'invalid' : 'valid'), this, attrs, errors);
+        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation),
+          errs = getCleanErrors(errors);
+
+        this.trigger('validated', this, attrs, errs);
+        this.trigger('validated:' + (errs ? 'invalid' : 'valid'), this, attrs, errs);
       },
 
       /**
@@ -231,6 +233,22 @@
     }
 
     return attrs;
+  };
+
+  /**
+   * Cleanup errors object from empty error values
+   * @param errors
+   */
+  var getCleanErrors = function(errors) {
+    var errs = _.inject(errors, function(memo, error, attr) {
+      if (error.length) {
+        memo[attr] = error;
+      }
+
+      return memo;
+    }, {});
+
+    return _.size(errs) ? errs : null;
   };
 
   Validator.ViewCallbacks = {
