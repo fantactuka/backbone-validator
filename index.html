@@ -16,28 +16,28 @@
     <div class="wrapper">
       <section>
 <h1>
-  Backbone-validator <a href="https://travis-ci.org/fantactuka/backbone-validator"><img src="https://travis-ci.org/fantactuka/backbone-validator.png?branch=master" alt="Build Status"></a>
+<a name="backbone-validator-v012-" class="anchor" href="#backbone-validator-v012-"><span class="mini-icon mini-icon-link"></span></a>backbone-validator v0.1.2 <a href="https://travis-ci.org/fantactuka/backbone-validator"><img src="https://travis-ci.org/fantactuka/backbone-validator.png?branch=master" alt="Build Status" style="max-width:100%;"></a>
 </h1>
 
-<p>
-  <a href="https://github.com/fantactuka/backbone-validator">View On <strong>GitHub</strong></a>
-</p>
+<p>Backbone model validator allows you to define validation rules for model and utilize it for model-standalone validation or bind its events to the view so you can display errors if needed. Inspired by @thedersen's backbone-validation</p>
 
-<p>Backbone model validator allows you to define validation rules for model and utilize it for model-standalone validation or bind its events to the view so you can display errors if needed. Inspired by <a href="https://github.com/thedersen" class="user-mention">@thedersen</a>'s backbone-validation</p>
-
-<h1>Installation</h1>
+<h1>
+<a name="installation" class="anchor" href="#installation"><span class="mini-icon mini-icon-link"></span></a>Installation</h1>
 
 <p>Using <a href="http://twitter.github.com/bower/">Bower</a> <code>bower install backbone-validator</code> or just copy <a href="https://raw.github.com/fantactuka/backbone-validator/master/backbone-validator.js">backbone-validator.js</a></p>
 
-<h1>Examples</h1>
+<h1>
+<a name="examples" class="anchor" href="#examples"><span class="mini-icon mini-icon-link"></span></a>Examples</h1>
 
 <ul>
 <li>
 <strong><a href="http://jsfiddle.net/fantactuka/6zh5y/">JSFiddle</a></strong>: Data binding &amp; model validation (with nested attributes) example using <a href="https://github.com/fantactuka/backbone-validator">Backbone.Validator</a> + <a href="https://github.com/fantactuka/backbone-ext">Backbone.Ext</a> + <a href="https://github.com/nytimes/backbone.stickit">Backbone.Stickit</a>
 </li>
-</ul><h1>Usage</h1>
+</ul><h1>
+<a name="usage" class="anchor" href="#usage"><span class="mini-icon mini-icon-link"></span></a>Usage</h1>
 
-<h2>Model</h2>
+<h2>
+<a name="model" class="anchor" href="#model"><span class="mini-icon mini-icon-link"></span></a>Model</h2>
 
 <div class="highlight"><pre><span class="kd">var</span> <span class="nx">User</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
   <span class="nx">validation</span><span class="o">:</span> <span class="p">{</span>
@@ -69,27 +69,27 @@
 <span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>
 </pre></div>
 
-<p>Setting attributes</p>
+<p><strong>Setting attributes</strong></p>
 
-<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span> 
 <span class="c1">// Attributes won't be set, since validation failed. Validation errors are stored</span>
 
-<span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">suppress</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="nx">user</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'wrong_format_email'</span><span class="p">,</span> <span class="nx">phone</span><span class="o">:</span> <span class="s1">'wrong_format_and_also_very_long'</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">validate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">suppress</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span> 
 <span class="c1">// Attributes will be set, but model will trigger its validation events, and store validation errors as for previous case</span>
 
 <span class="nx">user</span><span class="p">.</span><span class="nx">validationError</span><span class="p">;</span> <span class="c1">// =&gt; { email: ['Does not match format'], phone: ['Does not match format', 'Too long'] };</span>
 </pre></div>
 
-<p>Saving model</p>
+<p><strong>Saving model</strong></p>
 
-<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span> 
 <span class="c1">// Validation triggered automatically. If nothing passed, it will validate entire model.</span>
 
-<span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'user@example.com'</span> <span class="p">});</span>
+<span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">'user@example.com'</span> <span class="p">});</span> 
 <span class="c1">// Validation triggered automatically. Validates only email.</span>
 </pre></div>
 
-<p>Checking model validity</p>
+<p><strong>Checking model validity</strong></p>
 
 <div class="highlight"><pre><span class="c1">// Model#isValidreturns boolean depending on model validity</span>
 <span class="nx">user</span><span class="p">.</span><span class="nx">isValid</span><span class="p">();</span>                   <span class="c1">// Will check all attributes</span>
@@ -102,7 +102,32 @@
 <span class="nx">user</span><span class="p">.</span><span class="nx">validate</span><span class="p">(</span><span class="s1">'email'</span><span class="p">);</span>            <span class="c1">// Will check specific attribute</span>
 </pre></div>
 
-<h2>View</h2>
+<p><strong>Triggering validation events manually</strong></p>
+
+<p>Let's say you've sent data to the back-end and it returned server-validation errors (e.g. that email is already taken) and you want to display these errors on UI.
+It could be done by calling <code>triggerValidated</code> method that will trigger validation events, listened by the view and it will display errors:</p>
+
+<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">errors</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Errors object should have same format as Backbone.Validator errors:</span>
+      <span class="c1">// { &lt;attribute&gt;: [&lt;error&gt;, &lt;error&gt;, &lt;error&gt;] }</span>
+      <span class="c1">//</span>
+      <span class="c1">// First argument is a list of attributes that will be triggered, second one - errors object</span>
+      <span class="nx">user</span><span class="p">.</span><span class="nx">triggerValidated</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">errors</span><span class="p">),</span> <span class="nx">response</span><span class="p">.</span><span class="nx">errors</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Another case is when you want to reset validation on the form, and hide any validation error message, then you can run <code>triggerValidated</code> without any params, which will indicate (for the view) that none of model attributes is invalid:</p>
+
+<div class="highlight"><pre><span class="nx">user</span><span class="p">.</span><span class="nx">clear</span><span class="p">();</span>               <span class="c1">// Unset attributes</span>
+<span class="nx">user</span><span class="p">.</span><span class="nx">triggerValidated</span><span class="p">();</span>    <span class="c1">// Trigger `validated` events for all attributes passing no errors into it</span>
+</pre></div>
+
+<h2>
+<a name="view" class="anchor" href="#view"><span class="mini-icon mini-icon-link"></span></a>View</h2>
 
 <div class="highlight"><pre><span class="kd">var</span> <span class="nx">UserView</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
   <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -145,7 +170,8 @@
 <span class="p">});</span>
 </pre></div>
 
-<h2>Built-in validators</h2>
+<h2>
+<a name="built-in-validators" class="anchor" href="#built-in-validators"><span class="mini-icon mini-icon-link"></span></a>Built-in validators</h2>
 
 <ul>
 <li>
@@ -194,7 +220,8 @@
 
 </pre></div>
 
-<h2>Adding validator</h2>
+<h2>
+<a name="adding-validator" class="anchor" href="#adding-validator"><span class="mini-icon mini-icon-link"></span></a>Adding validator</h2>
 
 <div class="highlight"><pre><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Validator</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'myCustomValidator'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">expectation</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">value</span> <span class="o">*</span> <span class="nx">value</span> <span class="o">===</span> <span class="nx">expectation</span><span class="p">;</span>
@@ -208,7 +235,8 @@
 <span class="p">});</span>
 </pre></div>
 
-<h2>Standalone validator</h2>
+<h2>
+<a name="standalone-validator" class="anchor" href="#standalone-validator"><span class="mini-icon mini-icon-link"></span></a>Standalone validator</h2>
 
 <p>In fact you can utilize validator for plain objects, so you can do something like this:</p>
 
@@ -227,6 +255,7 @@
 
 <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Validator</span><span class="p">.</span><span class="nx">validate</span><span class="p">({</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">''</span><span class="p">,</span> <span class="nx">email</span><span class="o">:</span> <span class="s1">''</span> <span class="p">},</span> <span class="nx">validations</span><span class="p">);</span> <span class="c1">// -&gt; { name: ['Name is required'], email: ['Does not match format'] }</span>
 </pre></div>
+
       </section>
     </div>
     <script src="javascripts/scale.fix.js"></script>
