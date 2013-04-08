@@ -248,11 +248,24 @@ describe('Backbone.Validator', function() {
     });
 
     describe('trigger validation', function() {
+      var valid, invalid;
+
+      beforeEach(function() {
+        valid = jasmine.createSpy('valid');
+        invalid = jasmine.createSpy('invalid');
+        model.on('validated:valid', valid);
+        model.on('validated:invalid', invalid);
+      });
+
       it('filters empty error values', function() {
-        spy = jasmine.createSpy('validated');
-        model.on('validated', spy);
         model.triggerValidated(null, { email: [], name: ['Too short'] });
-        expect(spy.argsForCall[0][2]).toEqual({ name: ['Too short'] });
+        expect(invalid.argsForCall[0][2]).toEqual({ name: ['Too short'] });
+      });
+
+      it('fires validated:valid error if all errors are empty', function() {
+        model.triggerValidated(null, { email: [], name: [] });
+        expect(valid).toHaveBeenCalled();
+        expect(invalid).not.toHaveBeenCalled();
       });
     });
   });
