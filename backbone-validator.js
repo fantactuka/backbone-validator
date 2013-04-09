@@ -184,6 +184,7 @@
         var attrs = getAttrsToValidate(attributes, this.attributes, this.validation),
           errs = getCleanErrors(errors);
 
+        this.validationError = errs;
         this.trigger('validated', this, attrs, errs);
         this.trigger('validated:' + (errs ? 'invalid' : 'valid'), this, attrs, errs);
       },
