@@ -142,6 +142,23 @@ describe('Backbone.Validator', function() {
     });
   });
 
+  describe('#validate', function() {
+    it('allows error to be a function', function() {
+      var attrs = { name: 'a' },
+        validation = {
+          name: {
+            minLength: 3,
+            message: function(attr, value, expectation, validator) {
+              return 'Invalid ' + [].join.call(arguments, ', ');
+            }
+          }
+        },
+        errors = Validator.validate(attrs, validation);
+
+      expect(errors).toEqual({ name: ['Invalid name, a, 3, minLength'] });
+    });
+  });
+
   describe('Model', function() {
     beforeEach(function() {
       model = create(Backbone.Model, {
