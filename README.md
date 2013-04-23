@@ -35,7 +35,9 @@ var User = Backbone.Model.extend({
       message: 'Does not match format'
     }, {
       maxLength: 15,
-      message: 'Too long'
+      message: function(attrName, attrValue, attrExpectation, validatorName) {
+        return 'Passed ' + attrName ' is too long. It is expected to be shorter than ' + attrExpectation + ' chars';
+      }
     }]
   }
 });
@@ -178,8 +180,6 @@ var User = Backbone.Model.extend({
 });
 
 ```
-
-
 ## Adding validator
 ```js
 Backbone.Validator.add('myCustomValidator', function(value, expectation) {
