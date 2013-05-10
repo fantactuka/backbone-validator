@@ -178,7 +178,7 @@
           errors = this.validationError = this.validate(attrs, options) || null;
 
         if (errors) {
-          this.trigger('invalid', this, errors, options || {});
+          this.trigger('invalid', this, errors, _.extend(options || {}, { validationError: errors }));
         }
 
         return !errors;
@@ -190,7 +190,8 @@
        * @param {Object|null} errors
        */
       triggerValidated: function(attributes, errors) {
-        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation),
+        var validation = _.result(this, 'validation'),
+          attrs = getAttrsToValidate(attributes, this.attributes, validation),
           errs = getCleanErrors(errors);
 
         this.validationError = errs;
@@ -206,7 +207,8 @@
        * @return {boolean}
        */
       isValid: function(attributes, options) {
-        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation);
+        var validation = _.result(this, 'validation'),
+          attrs = getAttrsToValidate(attributes, this.attributes, validation);
         return !this.validate || !this.validate(attrs, options);
       }
     }
