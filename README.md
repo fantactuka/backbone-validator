@@ -97,6 +97,8 @@ user.clear();               // Unset attributes
 user.triggerValidated();    // Trigger `validated` events for all attributes passing no errors into it
 ```
 **Runtime configuration**
+
+In some cases you might want to configure validation in a runtime so it dependant on model's state/fields. You can do it by specifying it as a function, returning validation object:
 ```js
 var User = Backbone.Model.extend({
   validation: function() {
