@@ -155,8 +155,8 @@
        */
       validate: function(attributes, options) {
         var validation = _.result(this, 'validation') || {},
-          attrs = getAttrsToValidate(this, attributes),
-          errors = Validator.validate(attrs, validation, this);
+            attrs = getAttrsToValidate(this, attributes),
+            errors = Validator.validate(attrs, validation, this);
 
         options = options || {};
 
@@ -174,7 +174,7 @@
       _validate: function(attributes, options) {
         if (!options.validate || !this.validate) return true;
         var attrs = getAttrsToValidate(this, attributes),
-          errors = this.validationError = this.validate(attrs, options) || null;
+            errors = this.validationError = this.validate(attrs, options) || null;
 
         if (errors) {
           this.trigger('invalid', this, errors, _.extend(options || {}, { validationError: errors }));
@@ -190,7 +190,7 @@
        */
       triggerValidated: function(attributes, errors) {
         var attrs = getAttrsToValidate(this, attributes),
-          errs = getCleanErrors(errors);
+            errs = getCleanErrors(errors);
 
         this.validationError = errs;
         this.trigger('validated', this, attrs, errs);
@@ -231,9 +231,8 @@
    */
   var getAttrsToValidate = function(model, passedAttrs) {
     var modelAttrs = model.attributes,
-      validationAttrs = _.result(model, 'validation'),
-      attrs,
-      all;
+        validationAttrs = _.result(model, 'validation'),
+        attrs, all;
 
     if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
       attrs = pick(modelAttrs, passedAttrs);
