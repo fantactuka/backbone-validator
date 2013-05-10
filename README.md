@@ -96,7 +96,26 @@ Another case is when you want to reset validation on the form, and hide any vali
 user.clear();               // Unset attributes
 user.triggerValidated();    // Trigger `validated` events for all attributes passing no errors into it
 ```
-
+**Runtime configuration**
+```js
+var User = Backbone.Model.extend({
+  validation: function() {
+    return {
+      name: {
+        required: true
+      },
+      
+      company: {
+        required: !this.isEmployee()
+      }
+    }
+  },
+  
+  isEmployee: function() {
+    ...
+  }
+});
+```
 
 
 
