@@ -262,7 +262,6 @@ describe('Backbone.Validator', function() {
 
         model.save();
         expect(model.validationError).toEqual({ field_1: ['#1 required'] });
-        // expect(model.validationError).toBeNull();
       });
     });
 
