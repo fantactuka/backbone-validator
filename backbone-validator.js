@@ -155,7 +155,7 @@
        */
       validate: function(attributes, options) {
         var validation = _.result(this, 'validation') || {},
-          attrs = getAttrsToValidate(attributes, this.attributes, validation),
+          attrs = getAttrsToValidate(this, attributes),
           errors = Validator.validate(attrs, validation, this);
 
         options = options || {};
@@ -173,8 +173,7 @@
        */
       _validate: function(attributes, options) {
         if (!options.validate || !this.validate) return true;
-        var validation = _.result(this, 'validation'),
-          attrs = getAttrsToValidate(attributes, this.attributes, validation),
+        var attrs = getAttrsToValidate(this, attributes),
           errors = this.validationError = this.validate(attrs, options) || null;
 
         if (errors) {
@@ -190,8 +189,7 @@
        * @param {Object|null} errors
        */
       triggerValidated: function(attributes, errors) {
-        var validation = _.result(this, 'validation'),
-          attrs = getAttrsToValidate(attributes, this.attributes, validation),
+        var attrs = getAttrsToValidate(this, attributes),
           errs = getCleanErrors(errors);
 
         this.validationError = errs;
@@ -207,8 +205,7 @@
        * @return {boolean}
        */
       isValid: function(attributes, options) {
-        var validation = _.result(this, 'validation'),
-          attrs = getAttrsToValidate(attributes, this.attributes, validation);
+        var attrs = getAttrsToValidate(this, attributes);
         return !this.validate || !this.validate(attrs, options);
       }
     }
@@ -232,8 +229,11 @@
    * Fetching attributes to validate
    * @return {*}
    */
-  var getAttrsToValidate = function(passedAttrs, modelAttrs, validationAttrs) {
-    var attrs, all;
+  var getAttrsToValidate = function(model, passedAttrs) {
+    var modelAttrs = model.attributes,
+      validationAttrs = _.result(model, 'validation'),
+      attrs,
+      all;
 
     if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
       attrs = pick(modelAttrs, passedAttrs);
