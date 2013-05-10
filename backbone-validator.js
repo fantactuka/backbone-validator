@@ -286,8 +286,11 @@
     {
       name: 'required',
       message: 'Is required',
-      fn: function(value) {
-        return !!value;
+      fn: function(value, expectation) {
+        if (expectation === false)
+          return true;
+        else
+          return !!value;
       }
     },
     {
