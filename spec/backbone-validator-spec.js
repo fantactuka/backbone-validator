@@ -224,6 +224,20 @@ describe('Backbone.Validator', function() {
         model.save({field_1: 1, field_2: 'user@example.com', field_3: 1 });
         expect(model.validationError).toBeNull();
       });
+
+      it('allows `validation` to be a function', function() {
+        model.validation = function() {
+          return {
+            field_1: {
+              required: true,
+              message: '#1 required'
+            }
+          };
+        };
+
+        model.save();
+        expect(model.validationError).toEqual({ field_1: ['#1 required'] });
+      });
     });
 
     describe('via #isValid', function() {

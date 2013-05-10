@@ -154,8 +154,8 @@
        * @return {null|Object} - null if model is valid, otherwise - collection of errors associated with attributes
        */
       validate: function(attributes, options) {
-        var validation = this.validation || {},
-          attrs = getAttrsToValidate(attributes, this.attributes, this.validation),
+        var validation = _.result(this, 'validation') || {},
+          attrs = getAttrsToValidate(attributes, this.attributes, validation),
           errors = Validator.validate(attrs, validation, this);
 
         options = options || {};
@@ -173,14 +173,15 @@
        */
       _validate: function(attributes, options) {
         if (!options.validate || !this.validate) return true;
-        var attrs = getAttrsToValidate(attributes, this.attributes, this.validation);
-        var error = this.validationError = this.validate(attrs, options) || null;
+        var validation = _.result(this, 'validation'),
+          attrs = getAttrsToValidate(attributes, this.attributes, validation),
+          errors = this.validationError = this.validate(attrs, options) || null;
 
-        if (error) {
-          this.trigger('invalid', this, error, options || {});
+        if (errors) {
+          this.trigger('invalid', this, errors, options || {});
         }
 
-        return !error;
+        return !errors;
       },
 
       /**
