@@ -24,6 +24,10 @@ exclude = [
   
 ];
 
+coverageReporter = {
+  type : 'html',
+  dir : 'tmp/coverage/'
+};
 
 // test results reporter to use
 // possible values: 'dots', 'progress', 'junit'
