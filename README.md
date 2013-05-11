@@ -1,4 +1,4 @@
-backbone-validator v0.1.3 [![Build Status](https://travis-ci.org/fantactuka/backbone-validator.png?branch=master)](https://travis-ci.org/fantactuka/backbone-validator)
+backbone-validator [![Build Status](https://travis-ci.org/fantactuka/backbone-validator.png?branch=master)](https://travis-ci.org/fantactuka/backbone-validator)
 ==================
 
 Backbone model validator allows you to define validation rules for model and utilize it for model-standalone validation or bind its events to the view so you can display errors if needed. Inspired by @thedersen's backbone-validation

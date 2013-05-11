@@ -1,6 +1,6 @@
 {
   "name": "backbone-validator",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "main": "backbone-validator.js",
   "ignore": [
     "**/.*",
