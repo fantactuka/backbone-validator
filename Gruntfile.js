@@ -5,11 +5,26 @@ module.exports = function(grunt) {
     qunit: {
       all: ['spec/backbone-qunit.html']
     },
-    jasmine: {
-      src: ['backbone-validator.js'],
+    karma: {
       options: {
-        specs: 'spec/**/*spec.js',
-        vendor: ['backbone/test/vendor/jquery.js', 'backbone/test/vendor/underscore.js', 'backbone/backbone.js']
+        configFile: 'spec/karma.conf.js',
+        browsers: ['PhantomJS'],
+        autoWatch: true
+      },
+      ci: {
+        options: {
+          browsers: ['PhantomJS'],
+          reporters: ['dots'],
+          autoWatch: false,
+          singleRun: true
+        }
+      },
+      watch: {
+        options: {
+          browsers: ['PhantomJS'],
+          reporters: ['dots', 'growl'],
+          autoWatch: true
+        }
       }
     },
     uglify: {
@@ -27,11 +42,11 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('test', ['jshint', 'jasmine', 'qunit']);
+  grunt.registerTask('test', ['jshint', 'karma:ci', 'qunit']);
   grunt.registerTask('default', ['test', 'uglify']);
 };
