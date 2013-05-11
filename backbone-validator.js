@@ -287,15 +287,16 @@
       name: 'required',
       message: 'Is required',
       fn: function(value, expectation) {
-        if (expectation === false)
-          return true;
-        else
-          return !!value;
+        return expectation === false || !!value;
       }
     },
     {
       name: 'collection',
-      fn: function(collection) {
+      fn: function(collection, expectation) {
+        if (expectation === false) {
+          return true;
+        }
+
         var models = collection.models || collection;
 
         var errors = _.inject(models, function(memo, model, index) {

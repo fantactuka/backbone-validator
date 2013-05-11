@@ -50,6 +50,7 @@ describe('Backbone.Validator', function() {
     describe('required', function() {
       expectToPass('required', 'Hello', true);
       expectToPass('required', true, true);
+      expectToPass('required', undefined, false);
       expectToPass('required', 1, true);
       expectToFail('required', false, true);
       expectToFail('required', '', true);
@@ -115,6 +116,12 @@ describe('Backbone.Validator', function() {
         { name: 'Tom' },
         { name: 'Dan' }
       ]));
+
+      expectToPass('collection', new Users([
+        { name: 'Sam' },
+        { name: '' },
+        { name: '' }
+      ]), false);
 
       expectToFail('collection', new Users([
         { name: 'Sam' },
@@ -191,12 +198,7 @@ describe('Backbone.Validator', function() {
                 return !!value;
               }
             }
-          ],
-
-          field_4: {
-            required: false,
-            message: '#4 not required'
-          }
+          ]
         }
       });
 
@@ -236,26 +238,6 @@ describe('Backbone.Validator', function() {
             field_1: {
               required: true,
               message: '#1 required'
-            }
-          };
-        };
-
-        model.save();
-        expect(model.validationError).toEqual({ field_1: ['#1 required'] });
-      });
-
-      it('`validation` evaluates functions', function() {
-        model.notRequired = function() { return false; };
-
-        model.validation = function() {
-          return {
-            field_1: {
-              required: function(){ return true; }(),
-              message: '#1 required'
-            },
-            field_2: {
-              required: this.notRequired(),
-              message: '#2 not required'
             }
           };
         };
