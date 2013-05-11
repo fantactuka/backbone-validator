@@ -10,11 +10,11 @@ module.exports = function(grunt) {
       options: {
         configFile: 'spec/karma.conf.js',
         browsers: ['PhantomJS'],
+        singleRun: true,
         autoWatch: false
       },
       ci: {
         options: {
-          browsers: ['PhantomJS'],
           reporters: ['dots'],
           singleRun: true
         }
@@ -23,6 +23,7 @@ module.exports = function(grunt) {
         options: {
           browsers: ['PhantomJS'],
           reporters: ['dots', 'growl'],
+          singleRun: false,
           autoWatch: true
         }
       },
@@ -31,8 +32,7 @@ module.exports = function(grunt) {
           reporters: ['coverage'],
           preprocessors: {
             'backbone-validator.js': 'coverage'
-          },
-          singleRun: true
+          }
         }
       }
     },
