@@ -119,7 +119,13 @@ var User = Backbone.Model.extend({
 });
 ```
 
-
+## Error messages generator
+When using any internationalization you might want to have globaly defined error messages generator, that will translate errors into current locale in a runtime. In this case you can specify `Backbone.Validator.createMessage` method that will take precedence over default error messages:
+```js
+Backbone.Validator.createMessage = function(attrName, attrValue, validatorExpectation, validatorName) {
+  return i18n.translate(attrName + '.' + validatorName, { value: attrValue, expectation: validatorExpectation });
+};
+```
 
 ## View
 ```js
