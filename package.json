@@ -1,6 +1,6 @@
 {
   "name": "the-web-app",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "scripts": {
     "test": "grunt test"
   },
