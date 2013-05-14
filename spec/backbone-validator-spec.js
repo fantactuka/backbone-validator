@@ -150,19 +150,33 @@ describe('Backbone.Validator', function() {
   });
 
   describe('#validate', function() {
-    it('allows error to be a function', function() {
-      var attrs = { name: 'a' },
-        validation = {
-          name: {
-            minLength: 3,
-            message: function(attr, value, expectation, validator) {
-              return 'Invalid ' + [].join.call(arguments, ', ');
-            }
-          }
-        },
-        errors = Validator.validate(attrs, validation);
+    var attrs, validation;
 
-      expect(errors).toEqual({ name: ['Invalid name, a, 3, minLength'] });
+    beforeEach(function() {
+      attrs = { name: 'a' };
+      validation = {
+        name: {
+          minLength: 3,
+          message: function(attr, value, expectation, validator) {
+            return 'Inline: ' + _.toArray(arguments).join(', ');
+          }
+        }
+      };
+    });
+
+    it('allows error to be a function', function() {
+      var errors = Validator.validate(attrs, validation);
+      expect(errors).toEqual({ name: ['Inline: name, a, 3, minLength'] });
+    });
+
+    it('uses global error generator if specified', function() {
+      Validator.createMessage = function(object, attr, value, expectation, validator) {
+        return 'Global: ' + _.initial(arguments).join(', ');
+      };
+
+      validation.name.message = null;
+      var errors = Validator.validate(attrs, validation);
+      expect(errors).toEqual({ name: ['Global: name, a, 3, minLength'] });
     });
   });
 

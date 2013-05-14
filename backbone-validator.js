@@ -58,7 +58,11 @@
 
           var result = validator.fn.apply(context, [attrValue, attrExpectation]);
           if (result !== true) {
-            var error = validation.message || result || validator.message || 'Invalid';
+            var error = validation.message ||
+                result ||
+                createErrorMessage(attrName, attrValue, attrExpectation, validatorName, context) ||
+                validator.message ||
+                'Invalid';
 
             if (_.isFunction(error)) {
               error = error.apply(context, [attrName, attrValue, attrExpectation, validatorName]);
@@ -260,6 +264,10 @@
     }, {});
 
     return _.size(errs) ? errs : null;
+  };
+
+  var createErrorMessage = function() {
+    return Validator.createMessage ? Validator.createMessage.apply(null, arguments) : false;
   };
 
   Validator.ViewCallbacks = {
