@@ -233,3 +233,10 @@ var validations = {
 
 Backbone.Validator.validate({ name: '', email: '' }, validations); // -> { name: ['Name is required'], email: ['Does not match format'] }
 ```
+
+## Contributing
+* Before sending a pull request for a feature or bug fix, be sure to have specs.
+* Use the same coding style as the rest of the code.
+* In your pull request, do not addrebuild the minified file. It will be done during release process.
+* All pull requests should be made to the `master` branch.
+
