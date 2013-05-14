@@ -58,7 +58,7 @@
 
           var result = validator.fn.apply(context, [attrValue, attrExpectation]);
           if (result !== true) {
-            var error = validation.message || validator.message || result || 'Invalid';
+            var error = validation.message || result || validator.message || 'Invalid';
 
             if (_.isFunction(error)) {
               error = error.apply(context, [attrName, attrValue, attrExpectation, validatorName]);
