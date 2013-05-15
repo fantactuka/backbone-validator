@@ -21,7 +21,7 @@
 
   var Validator = Backbone.Validator = {
 
-    version: '0.1.5',
+    version: '0.2.0',
 
     /**
      * General validation method that gets attributes list and validations config and runs them all
