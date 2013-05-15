@@ -305,9 +305,7 @@
           return true;
         }
 
-        var models = collection.models || collection;
-
-        var errors = _.inject(models, function(memo, model, index) {
+        var errors = _.inject(collection.models || collection, function(memo, model, index) {
           var error = model.validate();
 
           if (error) {
@@ -324,14 +322,14 @@
       name: 'minLength',
       message: 'Is too short',
       fn: function(value, expectation) {
-        return value && value.length >= expectation;
+        return !value || value.length >= expectation;
       }
     },
     {
       name: 'maxLength',
       message: 'Is too long',
       fn: function(value, expectation) {
-        return value && value.length <= expectation;
+        return !value || value.length <= expectation;
       }
     },
     {

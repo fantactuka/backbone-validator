@@ -60,11 +60,15 @@ describe('Backbone.Validator', function() {
 
     describe('minLength', function() {
       expectToPass('minLength', 'Sam', 3);
+      expectToPass('minLength', undefined, 3);
+      expectToPass('minLength', '', 3);
       expectToFail('minLength', 'S', 3);
     });
 
     describe('maxLength', function() {
       expectToPass('maxLength', 'Sam', 3);
+      expectToPass('maxLength', undefined, 3);
+      expectToPass('maxLength', '', 3);
       expectToFail('maxLength', 'Samuel', 3);
     });
 
