@@ -16,7 +16,7 @@ Using [Bower](http://twitter.github.com/bower/) `bower install backbone-validato
 var User = Backbone.Model.extend({
   validation: {
     name: {
-      required: true,
+      blank: false,
       message: 'Name is required'
     },
     
