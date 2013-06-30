@@ -15,7 +15,8 @@ describe('Backbone.Validator', function() {
       validations.attr[validatorName] = expectation;
 
       it('fails with ' + jasmine.pp(value) + ' and returns ' + jasmine.pp(errorMessage), function() {
-        expect(Validator.validate({attr: value}, validations).attr[0]).toBeDefined();
+        var errors = Validator.validate({attr: value}, validations);
+        expect(errors.attr[0]).toBeDefined();
       });
     };
 
@@ -56,6 +57,18 @@ describe('Backbone.Validator', function() {
       expectToFail('required', '', true);
       expectToFail('required', null, true);
       expectToFail('required', undefined, true);
+    });
+
+    describe('blank', function() {
+      expectToPass('blank', 'Hello', false);
+      expectToPass('blank', '   Hello', false);
+      expectToPass('blank', '   Hello   ', false);
+      expectToPass('blank', [1], false);
+      expectToPass('blank', {a: 1}, false);
+      expectToFail('blank', '', false);
+      expectToFail('blank', '   ', false);
+      expectToFail('blank', [], false);
+      expectToFail('blank', {}, false);
     });
 
     describe('minLength', function() {
