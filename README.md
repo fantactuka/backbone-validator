@@ -172,6 +172,7 @@ bindValidation(this.model, {
 ## Built-in validators
 
 * `required` - just checks value validity with `!!`
+* `blank` - checks strings, arrays, objects to be non-empty (white-spaces-only string considered as invalid)
 * `collection` - runs validation for models collection/array and returns indexed error object
 * `minLength`
 * `maxLength`
@@ -189,6 +190,7 @@ var User = Backbone.Model.extend({
   validation: {
     name: {
       required: true,
+      blank: false,
       minLength: 2,
       maxLength: 20,
       fn: function(value) {
@@ -226,12 +228,12 @@ In fact you can utilize validator for plain objects, so you can do something lik
 ```js
 var validations = {
   name: {
-    required: true,
+    blank: false,
     message: 'Name is required'
   },
   
   email: {
-    required: true,
+    blank: false,
     format: 'email',
     message: 'Does not match format'
   }
