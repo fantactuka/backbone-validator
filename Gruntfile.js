@@ -2,7 +2,7 @@ module.exports = function(grunt) {
   'use strict';
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON('component.json'),
+    pkg: grunt.file.readJSON('bower.json'),
     qunit: {
       all: ['spec/backbone-qunit.html']
     },
