@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 
     version: {
       update: {
-        src: ['component.json', 'package.json', 'backbone-validator.js']
+        src: ['bower.json', 'package.json', 'backbone-validator.js']
       }
     }
   });
