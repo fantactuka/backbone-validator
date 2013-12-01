@@ -7,7 +7,7 @@ Backbone model validator allows you to define validation rules for model and uti
 Using [Bower](http://twitter.github.com/bower/) `bower install backbone-validator` or just copy [backbone-validator.js](https://raw.github.com/fantactuka/backbone-validator/master/backbone-validator.js)
 
 # Examples
-* **[JSFiddle](http://jsfiddle.net/fantactuka/6zh5y/)**: Data binding & model validation (with nested attributes) example using [Backbone.Validator](https://github.com/fantactuka/backbone-validator) + [Backbone.Ext](https://github.com/fantactuka/backbone-ext) + [Backbone.Stickit](https://github.com/nytimes/backbone.stickit)
+* **[JSFiddle](http://jsfiddle.net/fantactuka/6zh5y/)**: Data binding & model validation (with nested attributes) example using [Backbone.Validator](https://github.com/fantactuka/backbone-validator) + [Backbone.Stickit](https://github.com/nytimes/backbone.stickit)
 
 # Usage
 ## Model
