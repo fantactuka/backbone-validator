@@ -34,7 +34,9 @@ describe('Backbone.Validator', function() {
         Validator.add('custom', spy);
       });
 
-      it('passes expected value', function() {
+      it('passes expected value and all attributes being validated', function() {
+        var attributes = { field_1: 1, field_2: 2 };
+
         model = create(Backbone.Model, {
           validation: {
             field_1: {
@@ -43,8 +45,8 @@ describe('Backbone.Validator', function() {
           }
         });
 
-        model.set({field_1: 1}, {validate: true});
-        expect(spy).toHaveBeenCalledWith(1, 10);
+        model.set(attributes, {validate: true});
+        expect(spy).toHaveBeenCalledWith(1, 10, attributes);
       });
     });
 

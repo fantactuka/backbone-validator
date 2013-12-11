@@ -35,7 +35,7 @@
       var errors = {};
       _.chain(attrs).each(function(attrValue, attrName) {
         var validation = validations[attrName];
-        var error = this._validateAll(validation, attrName, attrValue, context);
+        var error = this._validateAll(validation, attrName, attrValue, context, attrs);
 
         if (error.length) {
           errors[attrName] = _.uniq(error);
@@ -45,7 +45,7 @@
       return _.size(errors) ? errors : null;
     },
 
-    _validateAll: function(validations, attrName, attrValue, context) {
+    _validateAll: function(validations, attrName, attrValue, context, allAttrs) {
       context = context || this;
 
       return _.inject(_.flatten([validations || []]), function(errors, validation) {
@@ -56,7 +56,7 @@
             throw new Error('Missed validator: ' + validatorName);
           }
 
-          var result = validator.fn.apply(context, [attrValue, attrExpectation]);
+          var result = validator.fn.apply(context, [attrValue, attrExpectation, allAttrs]);
           if (result !== true) {
             var error = validation.message ||
               result ||
@@ -360,8 +360,8 @@
     },
     {
       name: 'fn',
-      fn: function(value, expectation) {
-        return expectation.call(this, value);
+      fn: function(value, expectation, allAttrs) {
+        return expectation.call(this, value, allAttrs);
       }
     }
   ];
