@@ -355,7 +355,7 @@
       name: 'format',
       message: 'Does not match format',
       fn: function(value, expectation) {
-        return !value || !!value.match(Validator.formats[expectation] || expectation);
+        return !value || !!value.toString().match(Validator.formats[expectation] || expectation);
       }
     },
     {
