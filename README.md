@@ -217,7 +217,7 @@ Backbone.Validator.add('myCustomValidator', function(value, expectation) {
   return value * value === expectation;
 }, 'Default error message');
 ```
-Validation method could return true/false as well as error message or array of messages which will be treated as validation vailure:
+Validation method could return true/false as well as error message or array of messages which will be treated as validation failure:
 ```js
 Backbone.Validator.add('myCustomValidator', function(value, expectation) {
   return value === expectation ? true : 'Value does not match expectation. Should be ' + expectation;
