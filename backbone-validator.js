@@ -252,18 +252,18 @@
 
   /**
    * Cleanup errors object from empty error values
-   * @param errors
+   * @param allErrors
    */
-  var getCleanErrors = function(errors) {
-    var errs = _.inject(errors, function(memo, error, attr) {
-      if (error.length) {
-        memo[attr] = error;
+  var getCleanErrors = function(allErrors) {
+    var cleanErrors = _.inject(allErrors, function(memo, fieldErrors, attr) {
+      if (fieldErrors.length) {
+        memo[attr] = _.isString(fieldErrors) ? [fieldErrors] : fieldErrors;
       }
 
       return memo;
     }, {});
 
-    return _.size(errs) ? errs : null;
+    return _.size(cleanErrors) ? cleanErrors : null;
   };
 
   var createErrorMessage = function() {
