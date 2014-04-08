@@ -16,7 +16,10 @@ describe('Backbone.Validator', function() {
 
       it('fails with ' + jasmine.pp(value) + ' and returns ' + jasmine.pp(errorMessage), function() {
         var errors = Validator.validate({attr: value}, validations);
-        expect(errors.attr[0]).toBeDefined();
+
+        errorMessage ?
+          expect(errors.attr[0]).toEqual(errorMessage) :
+          expect(errors.attr[0]).toBeDefined();
       });
     };
 
