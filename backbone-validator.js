@@ -33,12 +33,16 @@
      */
     validate: function(attrs, validations, context) {
       var errors = {};
-      _.chain(attrs).each(function(attrValue, attrName) {
-        var validation = validations[attrName];
-        var error = this._validateAll(validation, attrName, attrValue, context, attrs);
 
-        if (error.length) {
-          errors[attrName] = _.uniq(error);
+      _.each(attrs, function(attrValue, attrName) {
+        var validation = validations[attrName];
+
+        if (validation) {
+          var error = this._validateAll(validation, attrName, attrValue, context, attrs);
+
+          if (error.length) {
+            errors[attrName] = _.uniq(error);
+          }
         }
       }, this);
 
