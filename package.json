@@ -1,16 +1,48 @@
 {
-  "name": "the-web-app",
+  "name": "backbone-validator.js",
+  "title": "Backbone Validator",
+  "description": "Backbone model validator allows you to define validation rules for model and utilize it for model-standalone validation or bind its events to the view so you can display errors if needed.",
   "version": "0.2.4",
+  "main": "backbone-validator.js",
+  "homepage": "http://fantactuka.github.io/backbone-validator/",
+  "author": {
+    "name": "fantactuka",
+    "url": "https://github.com/fantactuka"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fantactuka/backbone-validator.git"
+  },
+  "keywords": [
+    "jquery",
+    "javascript",
+    "backbone",
+    "validation",
+    "validator"
+  ],
+  "bugs": {
+    "url": "https://github.com/fantactuka/backbone-validator/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/fantactuka/backbone-validator/blob/master/LICENSE"
+    }
+  ],  
   "scripts": {
     "test": "grunt test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "backbone": "~1.1.2",
+    "underscore": "~1.6.0"
+  },
   "devDependencies": {
-    "grunt": "0.4.0",
-    "grunt-karma": "0.4.4",
-    "grunt-version": "0.2.1",
-    "grunt-contrib-jshint": "0.1.1",
-    "grunt-contrib-uglify": "0.1.1",
-    "grunt-contrib-qunit": "0.1.1"
+    "grunt": "~0.4.0",
+    "grunt-karma": "~0.4.4",
+    "grunt-version": "~0.2.1",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-uglify": "~0.1.1",
+    "grunt-contrib-qunit": "~0.1.1"
   }
 }
