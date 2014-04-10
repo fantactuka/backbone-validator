@@ -346,6 +346,22 @@
       }
     },
     {
+      name: 'model',
+      fn: function(model, expectation) {
+        if (expectation === false || !model) {
+          return true;
+        }
+
+        var Model = typeof expectation === 'function' ? expectation : null;
+        
+        model = !model.attributes && Model ? new Model(model) : model;
+
+        var errors = model.validate();
+
+        return errors || true;
+      }
+    },
+    {
       name: 'minLength',
       message: 'Is too short',
       fn: function(value, expectation) {

@@ -275,6 +275,47 @@ describe('Backbone.Validator', function() {
       });
 
     });
+
+    describe('model', function() {
+      var User = Backbone.Model.extend({
+        validation: {
+          name: {
+            required: true
+          }
+        }
+      });
+
+      expectToPass('model', new User({ name: 'Sam' }));
+      
+      expectToPass('model', new User({ name: '' }), false);
+
+      expectToPass('model', undefined);
+
+      expectToPass('model', null);    
+
+      expectToFail('model', new User({ name: '' }), true, { name: [ 'Is required' ] });
+      
+      expectToPass('model', { name: 'Sam' }, User);
+
+      expectToFail('model', { name: '' }, User, { name: [ 'Is required' ] });
+
+      describe('using nested models', function() {
+        var Comment = Backbone.Model.extend({
+          validation: {
+            user: {
+              model: User
+            }
+          }
+        });
+
+        expectToPass('model', new Comment({ user: new User({ name: 'Sam'} ) }));
+        
+        expectToPass('model', { user: { name: 'Sam'} }, Comment);
+
+        expectToFail('model', { user: { name: ''} }, Comment, { user: [ { name: ['Is required'] } ] });
+      });
+
+    });
   });
 
   describe('#validate', function() {
