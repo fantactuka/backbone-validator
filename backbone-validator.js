@@ -324,11 +324,15 @@
     {
       name: 'collection',
       fn: function(collection, expectation) {
-        if (expectation === false) {
+        if (expectation === false || !collection) {
           return true;
         }
 
-        var errors = _.inject(collection.models || collection, function(memo, model, index) {
+        var Collection = typeof expectation === 'function' ? expectation : null;
+        
+        collection = !collection.models && Collection ? new Collection(collection).models : ( collection.models || collection );
+
+        var errors = _.inject(collection, function(memo, model, index) {
           var error = model.validate();
 
           if (error) {
