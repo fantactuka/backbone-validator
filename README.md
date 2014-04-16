@@ -201,7 +201,7 @@ var User = Backbone.Model.extend({
     },
     
     phone: {
-      format: 'numeric'
+      format: 'number'
     },
     
     documents: {
