@@ -147,6 +147,10 @@ describe('Backbone.Validator', function() {
         { name: '' }
       ]), false);
 
+      expectToPass('collection', undefined, true);      
+      expectToPass('collection', null, true);      
+      expectToPass('collection', [], true);      
+
       expectToFail('collection', new Users([
         { name: 'Sam' },
         { name: '' },
@@ -156,20 +160,161 @@ describe('Backbone.Validator', function() {
         [2, { name: ['Is required'] }]
       ]);
 
-      expectToPass('collection', [
-        new User({ name: 'Sam' }),
-        new User({ name: 'Tom' }),
-        new User({ name: 'Dan' })
-      ]);
+      describe('using an array of models', function() {
+        expectToPass('collection', [
+          new User({ name: 'Sam' }),
+          new User({ name: 'Tom' }),
+          new User({ name: 'Dan' })
+        ]);
 
-      expectToFail('collection', [
-        new User({ name: 'Sam' }),
-        new User({ name: '' }),
-        new User({ name: '' })
-      ], true, [
-        [1, { name: ['Is required'] }],
-        [2, { name: ['Is required'] }]
-      ]);
+        expectToFail('collection', [
+          new User({ name: 'Sam' }),
+          new User({ name: '' }),
+          new User({ name: '' })
+        ], true, [
+          [1, { name: ['Is required'] }],
+          [2, { name: ['Is required'] }]
+        ]);
+      });
+
+      describe('using an array of simple objects, and collection constructor as the expectation', function() {
+        expectToPass('collection', [
+          { name: 'Sam' },
+          { name: 'Tom' },
+          { name: 'Dan' }
+        ], Users);
+
+        expectToFail('collection', [
+          { name: 'Sam' },
+          { name: '' },
+          { name: '' }
+        ], Users, [
+          [1, { name: ['Is required'] }],
+          [2, { name: ['Is required'] }]
+        ]);
+      });
+
+      describe('using an array of models, and collection constructor as the expectation', function() {
+        expectToPass('collection', [
+          new User({ name: 'Sam' }),
+          new User({ name: 'Tom' }),
+          new User({ name: 'Dan' })
+        ]);
+
+        expectToFail('collection', [
+          new User({ name: 'Sam' }),
+          new User({ name: '' }),
+          new User({ name: '' })
+        ], true, [
+          [1, { name: ['Is required'] }],
+          [2, { name: ['Is required'] }]
+        ]);
+      });
+
+      describe('using nested collections', function() {
+        var Comment = Backbone.Model.extend({
+          validation: {
+            title: {
+              required: true
+            }
+          }
+        });
+        var Comments = Backbone.Collection.extend({ model: Comment });
+        
+        var Post = Backbone.Model.extend({
+          validation: {
+            title: {
+              required: true
+            },
+            comments: {
+              collection: Comments
+            }
+          }
+        });
+        var Posts = Backbone.Collection.extend({ model: Post });
+
+        expectToPass('collection', [
+          { title: 'New Post' },
+          { title: 'Old Post' },
+          { title: 'Older Post' }
+        ], Posts);
+
+        expectToPass('collection', [
+          { title: 'New Post', comments: [
+            { title: 'A comment' },
+            { title: 'Another comment' }
+          ] },
+          { title: 'Old Post', comments: [
+            { title: 'A comment' },
+            { title: 'Another comment' }
+          ] },
+          { title: 'Older Post', comments: [
+            { title: 'A comment' },
+            { title: 'Another comment' }
+          ] }
+        ], Posts);
+
+        expectToFail('collection', [
+          { title: 'New Post', comments: [
+            { title: 'A comment' },
+            { title: '' }
+          ] },
+          { title: 'Old Post', comments: [
+            { title: '' },
+            { title: 'Another comment' }
+          ] },
+          { title: 'Older Post', comments: [
+            { title: 'A comment' },
+            { title: 'Another comment' }
+          ] }
+        ], Posts, [
+          [0, { comments: [[ [1, { title: ['Is required'] }] ]] } ],
+          [1, { comments: [[ [0, { title: ['Is required'] }] ]] } ]
+        ]);        
+
+      });
+
+    });
+
+    describe('model', function() {
+      var User = Backbone.Model.extend({
+        validation: {
+          name: {
+            required: true
+          }
+        }
+      });
+
+      expectToPass('model', new User({ name: 'Sam' }));
+      
+      expectToPass('model', new User({ name: '' }), false);
+
+      expectToPass('model', undefined);
+
+      expectToPass('model', null);    
+
+      expectToFail('model', new User({ name: '' }), true, { name: [ 'Is required' ] });
+      
+      expectToPass('model', { name: 'Sam' }, User);
+
+      expectToFail('model', { name: '' }, User, { name: [ 'Is required' ] });
+
+      describe('using nested models', function() {
+        var Comment = Backbone.Model.extend({
+          validation: {
+            user: {
+              model: User
+            }
+          }
+        });
+
+        expectToPass('model', new Comment({ user: new User({ name: 'Sam'} ) }));
+        
+        expectToPass('model', { user: { name: 'Sam'} }, Comment);
+
+        expectToFail('model', { user: { name: ''} }, Comment, { user: [ { name: ['Is required'] } ] });
+      });
+
     });
   });
 

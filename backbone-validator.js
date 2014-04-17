@@ -324,11 +324,15 @@
     {
       name: 'collection',
       fn: function(collection, expectation) {
-        if (expectation === false) {
+        if (expectation === false || !collection) {
           return true;
         }
 
-        var errors = _.inject(collection.models || collection, function(memo, model, index) {
+        var Collection = typeof expectation === 'function' ? expectation : null;
+        
+        collection = !collection.models && Collection ? new Collection(collection).models : ( collection.models || collection );
+
+        var errors = _.inject(collection, function(memo, model, index) {
           var error = model.validate();
 
           if (error) {
@@ -339,6 +343,22 @@
         }, []);
 
         return errors.length ? errors : true;
+      }
+    },
+    {
+      name: 'model',
+      fn: function(model, expectation) {
+        if (expectation === false || !model) {
+          return true;
+        }
+
+        var Model = typeof expectation === 'function' ? expectation : null;
+        
+        model = !model.attributes && Model ? new Model(model) : model;
+
+        var errors = model.validate();
+
+        return errors || true;
       }
     },
     {
