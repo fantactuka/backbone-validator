@@ -123,6 +123,25 @@ var User = Backbone.Model.extend({
 });
 ```
 
+**Errors post-processing**
+
+In some cases you might need to re-format errors, e.g. flatten keys of nested models' errors, etc. In this case you can do it globally for all models via implementing custom `Backbone.Validator.ModelCallbacks.processErrors`, or you can override it for particular model via options passed to `validate()` and `isValid()` methods. E.g. 
+```js
+model.validate(null, { 
+  processErrors: function(errors) { 
+    return flatten(errors); 
+  } 
+});
+
+// or any other method that calls #validate internaly
+
+model.set(newAttrs, { 
+  processErrors: function(errors) { 
+    return flatten(errors); 
+  } 
+});
+```
+
 ## Error messages generator
 When using any internationalization you might want to have globaly defined error messages generator, that will translate errors into current locale in a runtime. In this case you can specify `Backbone.Validator.createMessage` method that will take precedence over default error messages:
 ```js
