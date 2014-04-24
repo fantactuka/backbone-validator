@@ -30,6 +30,10 @@ var User = Backbone.Model.extend({
       collection: true
     },
     
+    address: {
+      model: true
+    },
+    
     phone: [{
       format: 'number',
       message: 'Does not match format'
@@ -174,6 +178,7 @@ bindValidation(this.model, {
 * `required` - just checks value validity with `!!`
 * `blank` - checks strings, arrays, objects to be non-empty (white-spaces-only string considered as invalid)
 * `collection` - runs validation for models collection/array and returns indexed error object
+* `model` - runs validation for nested model
 * `minLength`
 * `maxLength`
 * `fn` - function that receives attribute value and returns true if it's valid, or false/error message if not
