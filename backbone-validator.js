@@ -168,6 +168,10 @@
 
         options = options || {};
 
+        errors = options.processErrors ?
+          options.processErrors(errors) :
+          Validator.ModelCallbacks.processErrors(errors);
+
         if (!options.silent) {
           _.defer(_.bind(this.triggerValidated, this), attrs, errors);
         }
@@ -287,6 +291,12 @@
 
       input.next('.error-text').remove();
       input.addClass('error').after('<div class="error-text">' + errors.join(', ') + '</div>');
+    }
+  };
+
+  Validator.ModelCallbacks = {
+    processErrors: function(errors) {
+      return errors;
     }
   };
 

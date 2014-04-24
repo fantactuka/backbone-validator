@@ -371,6 +371,24 @@ describe('Backbone.Validator', function() {
         expect(invalid).not.toHaveBeenCalled();
       });
     });
+
+    describe('#processErrors', function() {
+      it('used from options', function() {
+        var spy = jasmine.createSpy('processErrors').andCallFake(function(errors) {
+            return errors;
+          }),
+          errors = model.validate(null, { processErrors: spy });
+
+        expect(spy).toHaveBeenCalledWith(errors);
+      });
+
+      it('used from global ModelCallbacks if not defined in options', function() {
+        var spy = spyOn(Validator.ModelCallbacks, 'processErrors').andCallThrough(),
+          errors = model.validate(null);
+
+        expect(spy).toHaveBeenCalledWith(errors);
+      });
+    });
   });
 
   describe('View', function() {
