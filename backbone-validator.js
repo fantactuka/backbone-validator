@@ -328,11 +328,11 @@
           return true;
         }
 
-        var Collection = typeof expectation === 'function' ? expectation : null;
-        
-        collection = !collection.models && Collection ? new Collection(collection).models : ( collection.models || collection );
+        if (typeof expectation === 'function') {
+          collection = expectation.call(this, collection);
+        }
 
-        var errors = _.inject(collection, function(memo, model, index) {
+        var errors = _.inject(collection.models || collection, function(memo, model, index) {
           var error = model.validate();
 
           if (error) {
@@ -352,13 +352,11 @@
           return true;
         }
 
-        var Model = typeof expectation === 'function' ? expectation : null;
-        
-        model = !model.attributes && Model ? new Model(model) : model;
+        if (typeof expectation === 'function') {
+          model = expectation.call(this, model);
+        }
 
-        var errors = model.validate();
-
-        return errors || true;
+        return model.validate() || true;
       }
     },
     {
