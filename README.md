@@ -179,8 +179,8 @@ bindValidation(this.model, {
 * `fn` - function that receives attribute value and returns true if it's valid, or false/error message if not
 * `format` - pattern matching.
   * `email`
-  * `numeric`
-  * `email`
+  * `digits`
+  * `number`
   * `url`
   * It's possible to add custom formats via `Backbone.Validator.formats.phone = /(\d){3,4}-(\d){3,4}-(\d){3,4}/;`
 
@@ -201,7 +201,7 @@ var User = Backbone.Model.extend({
     },
     
     phone: {
-      format: 'numeric'
+      format: 'number'
     },
     
     documents: {
