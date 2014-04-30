@@ -89,8 +89,9 @@ user.save(null, {
       // Errors object should have same format as Backbone.Validator errors:
       // { <attribute>: [<error>, <error>, <error>] }
       //
-      // First argument is a list of attributes that will be triggered, second one - errors object
-      user.triggerValidated(_.keys(response.errors), response.errors);
+      // This will trigger validation events with backend-generated errors, and in case model is bound to view,
+      // it will show errors on UI
+      user.triggerValidated(null, response.errors);
     }
   }
 });
