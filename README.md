@@ -15,6 +15,10 @@ Using [Bower](http://twitter.github.com/bower/) `bower install backbone-validato
 ```js
 var User = Backbone.Model.extend({
   validation: {
+    '*': function(attrs, options){
+      //freestyle validation, same signature as Backbone.validate(),
+      //for cases when structured-validation is not enough
+    },
     name: {
       blank: false,
       message: 'Name is required'
