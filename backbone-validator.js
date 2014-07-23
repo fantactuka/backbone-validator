@@ -286,15 +286,17 @@
 * @param {Object|Array|String} moreErrors - new errors to be merged into the errors object
 */
   var mergeErrors = function(errors, moreErrors, defaultKey){
-    var newErrors = moreErrors || {};
-    if(_.isString(newErrors) || _.isArray(newErrors) || !_.isObject(newErrors)){
+    moreErrors || (moreErrors = {});
+    errors || (errors = {});
+    if(_.isString(moreErrors) || _.isArray(moreErrors) || !_.isObject(moreErrors)){
         //_.union uniquifies and performs scalar->array conversion if err is scalar
-        errors[defaultKey] = _.union(errors[defaultKey] || [], newErrors);
+        errors[defaultKey] = _.union(errors[defaultKey] || [], moreErrors);
     } else{
-        _.each(newErrors, function(err, field){
+        _.each(moreErrors, function(err, field){
             errors[field] = _.union(errors[field] || [], err);
         });
     }
+    return errors;
   };
 
   var createErrorMessage = function() {
