@@ -286,8 +286,8 @@
 * @param {Object|Array|String} moreErrors - new errors to be merged into the errors object
 */
   var mergeErrors = function(errors, moreErrors, defaultKey){
-    moreErrors || (moreErrors = {});
-    errors || (errors = {});
+    moreErrors = moreErrors || {};
+    errors = errors || {};
     if(_.isString(moreErrors) || _.isArray(moreErrors) || !_.isObject(moreErrors)){
         //_.union uniquifies and performs scalar->array conversion if err is scalar
         errors[defaultKey] = _.union(errors[defaultKey] || [], moreErrors);
