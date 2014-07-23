@@ -223,7 +223,8 @@
        * @return {boolean}
        */
       isValid: function(attributes, options) {
-        return !this.validate || !this.validate(attributes, options);
+        var attrs = getAttrsToValidate(this, attributes);
+        return !this.validate || !this.validate(attrs, options);
       }
     }
   };
