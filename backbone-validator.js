@@ -163,9 +163,15 @@
        */
       validate: function(attributes, options) {
         var validation = _.result(this, 'validation') || {},
-          attrs = getAttrsToValidate(this, attributes),
-          errors = Validator.validate(attrs, validation, this);
-
+          attrs = getAttrsToValidate(this, attributes);
+        
+        //validate individual fields then optionally do whole-model validation
+        //whole-model validation can be used to call parent models' validate() func
+        var errors = Validator.validate(attrs, _.omit(validation,'*'), this);
+        if(_.has(validation,'*')){
+            mergeErrors(errors, validation['*'].call(this, attributes, options), '*');
+        }
+        
         options = options || {};
 
         errors = options.processErrors ?
@@ -243,7 +249,7 @@
    */
   var getAttrsToValidate = function(model, passedAttrs) {
     var modelAttrs = model.attributes,
-      validationAttrs = _.result(model, 'validation'),
+      validationAttrs = _.omit(_.result(model, 'validation'),'*'),
       attrs, all;
 
     if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
@@ -272,6 +278,25 @@
     }, {});
 
     return _.size(cleanErrors) ? cleanErrors : null;
+  };
+  
+  /**
+* Merge moreErrors into errors object.
+* @param {Object} errors - object containing errors keyed by attribute names
+* @param {Object|Array|String} moreErrors - new errors to be merged into the errors object
+*/
+  var mergeErrors = function(errors, moreErrors, defaultKey){
+    moreErrors = moreErrors || {};
+    errors = errors || {};
+    if(_.isString(moreErrors) || _.isArray(moreErrors) || !_.isObject(moreErrors)){
+        //_.union uniquifies and performs scalar->array conversion if err is scalar
+        errors[defaultKey] = _.union(errors[defaultKey] || [], moreErrors);
+    } else{
+        _.each(moreErrors, function(err, field){
+            errors[field] = _.union(errors[field] || [], err);
+        });
+    }
+    return errors;
   };
 
   var createErrorMessage = function() {
