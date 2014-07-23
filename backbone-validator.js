@@ -249,7 +249,7 @@
    */
   var getAttrsToValidate = function(model, passedAttrs) {
     var modelAttrs = model.attributes,
-      validationAttrs = _.result(model, 'validation'),
+      validationAttrs = _.omit(_.result(model, 'validation'),'*'),
       attrs, all;
 
     if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
