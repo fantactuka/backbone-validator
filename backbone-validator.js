@@ -173,7 +173,7 @@
           Validator.ModelCallbacks.processErrors(errors);
 
         if (!options.silent) {
-          _.defer(_.bind(this.triggerValidated, this), attrs, errors);
+          this.triggerValidated(attrs, errors);
         }
 
         return options && options.suppress ? null : errors;
