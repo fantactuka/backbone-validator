@@ -202,7 +202,7 @@
        */
       triggerValidated: function(attributes, errors) {
         var attrs = getAttrsToValidate(this, attributes),
-          errs = getCleanErrors(errors);
+          errs = cleanErrors(errors);
 
         this.validationError = errs;
         this.trigger('validated', this, attrs, errs);
@@ -262,7 +262,7 @@
    * Cleanup errors object from empty error values
    * @param allErrors
    */
-  var getCleanErrors = function(allErrors) {
+  function cleanErrors(allErrors) {
     var cleanErrors = _.inject(allErrors, function(memo, fieldErrors, attr) {
       if (fieldErrors.length) {
         memo[attr] = _.isString(fieldErrors) ? [fieldErrors] : fieldErrors;
@@ -272,11 +272,11 @@
     }, {});
 
     return _.size(cleanErrors) ? cleanErrors : null;
-  };
+  }
 
-  var createErrorMessage = function() {
+  function createErrorMessage() {
     return Validator.createMessage ? Validator.createMessage.apply(null, arguments) : false;
-  };
+  }
 
   Validator.ViewCallbacks = {
     onValidField: function(name /*, value, model*/) {
