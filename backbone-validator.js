@@ -243,13 +243,12 @@
    */
   var getAttrsToValidate = function(model, passedAttrs) {
     var modelAttrs = model.attributes,
-      validationAttrs = _.result(model, 'validation'),
       attrs, all;
 
     if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
       attrs = pick(modelAttrs, passedAttrs);
     } else if (!passedAttrs) {
-      all = _.extend({}, modelAttrs, validationAttrs || {});
+      all = _.extend({}, modelAttrs, _.result(model, 'validation') || {});
       attrs = pick(modelAttrs, _.keys(all));
     } else {
       attrs = passedAttrs;
