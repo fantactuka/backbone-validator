@@ -2,7 +2,7 @@
   "name": "backbone-validator.js",
   "title": "Backbone Validator",
   "description": "Backbone model validator allows you to define validation rules for model and utilize it for model-standalone validation or bind its events to the view so you can display errors if needed.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "backbone-validator.js",
   "homepage": "http://fantactuka.github.io/backbone-validator/",
   "author": {
