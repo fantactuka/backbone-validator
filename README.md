@@ -269,6 +269,14 @@ var validations = {
 Backbone.Validator.validate({ name: '', email: '' }, validations); // -> { name: ['Name is required'], email: ['Does not match format'] }
 ```
 
+## Preparing attributes before running validation
+You can change the way attributes to validate are extracted from the models. See original implementation for details:
+```js
+Backbone.Validate.getAttrsToValidate = function(model, attributesList) {
+  ...
+}
+```
+
 ## Contributing
 * Before sending a pull request for a feature or bug fix, be sure to have specs.
 * Use the same coding style as the rest of the code.
