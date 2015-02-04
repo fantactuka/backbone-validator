@@ -63,14 +63,16 @@
           var result = validator.fn.apply(context, [attrValue, attrExpectation, allAttrs]);
           if (result !== true) {
             var error = validation.message ||
-              result ||
-              createErrorMessage(attrName, attrValue, attrExpectation, validatorName, context) ||
-              validator.message ||
-              'Invalid';
+                result ||
+                Validator.createMessage(attrName, attrValue, attrExpectation, validatorName, context) ||
+                validator.message ||
+                'Invalid';
 
             if (_.isFunction(error)) {
               error = error.apply(context, [attrName, attrValue, attrExpectation, validatorName]);
             }
+
+            error = Validator.formatMessage(error, attrName, attrValue, attrExpectation, validatorName, context);
 
             errors.push(error);
           }
@@ -125,6 +127,22 @@
       }
 
       return attrs;
+    },
+
+    /**
+     * Override this hook to generate error message, e.g. using I18n
+     * @returns {boolean}
+     */
+    createMessage: function(/* attrName, attrValue, attrExpectation, validatorName, context */) {
+      return false;
+    },
+
+    /**
+     * Override this hook to format all error messages, e.g. running them through _.template and
+     * pass variables inside
+     */
+    formatMessage: function(message /* attrName, attrValue, attrExpectation, validatorName, context */) {
+      return message;
     }
   };
 
@@ -271,10 +289,6 @@
     }, {});
 
     return _.size(errors) ? errors : null;
-  }
-
-  function createErrorMessage() {
-    return Validator.createMessage ? Validator.createMessage.apply(null, arguments) : false;
   }
 
   Validator.ViewCallbacks = {

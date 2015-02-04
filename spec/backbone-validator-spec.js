@@ -221,13 +221,23 @@ describe('Backbone.Validator', function() {
     });
 
     it('uses global error generator if specified', function() {
-      Validator.createMessage = function(object, attr, value, expectation, validator) {
-        return 'Global: ' + _.initial(arguments).join(', ');
-      };
-
       validation.name.message = null;
+      spyOn(Validator, 'createMessage').and.callFake(function() {
+        return 'Global: ' + _.initial(arguments).join(', ');
+      });
+
       var errors = Validator.validate(attrs, validation);
       expect(errors).toEqual({ name: ['Global: name, a, 3, minLength'] });
+    });
+
+    it('formats error message', function() {
+      validation.name.message = 'inline';
+      spyOn(Validator, 'formatMessage').and.callFake(function() {
+        return 'Formatted: ' + _.initial(arguments).join(', ');
+      });
+
+      var errors = Validator.validate(attrs, validation);
+      expect(errors).toEqual({ name: ['Formatted: inline, name, a, 3, minLength'] });
     });
   });
 
