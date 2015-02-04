@@ -105,6 +105,26 @@
      * @property _validators
      */
     _validators: {
+    },
+
+    /**
+     * Fetching attributes to validate
+     * @return {*}
+     */
+    getAttrsToValidate: function(model, passedAttrs) {
+      var modelAttrs = model.attributes,
+          attrs, all;
+
+      if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
+        attrs = pick(modelAttrs, passedAttrs);
+      } else if (!passedAttrs) {
+        all = _.extend({}, modelAttrs, _.result(model, 'validation') || {});
+        attrs = pick(modelAttrs, _.keys(all));
+      } else {
+        attrs = passedAttrs;
+      }
+
+      return attrs;
     }
   };
 
@@ -163,7 +183,7 @@
        */
       validate: function(attributes, options) {
         var validation = _.result(this, 'validation') || {},
-          attrs = getAttrsToValidate(this, attributes),
+          attrs = Validator.getAttrsToValidate(this, attributes),
           errors = Validator.validate(attrs, validation, this);
 
         options = options || {};
@@ -185,7 +205,7 @@
        */
       _validate: function(attributes, options) {
         if (!options.validate || !this.validate) return true;
-        var attrs = getAttrsToValidate(this, attributes),
+        var attrs = Validator.getAttrsToValidate(this, attributes),
           errors = this.validationError = this.validate(attrs, options) || null;
 
         if (errors) {
@@ -201,7 +221,7 @@
        * @param {Object|null} errors
        */
       triggerValidated: function(attributes, errors) {
-        var attrs = getAttrsToValidate(this, attributes),
+        var attrs = Validator.getAttrsToValidate(this, attributes),
           errs = cleanErrors(errors);
 
         this.validationError = errs;
@@ -217,7 +237,7 @@
        * @return {boolean}
        */
       isValid: function(attributes, options) {
-        var attrs = getAttrsToValidate(this, attributes);
+        var attrs = Validator.getAttrsToValidate(this, attributes);
         return !this.validate || !this.validate(attrs, options);
       }
     }
@@ -235,26 +255,6 @@
       memo[key] = object[key];
       return memo;
     }, {});
-  };
-
-  /**
-   * Fetching attributes to validate
-   * @return {*}
-   */
-  var getAttrsToValidate = function(model, passedAttrs) {
-    var modelAttrs = model.attributes,
-      attrs, all;
-
-    if (_.isArray(passedAttrs) || _.isString(passedAttrs)) {
-      attrs = pick(modelAttrs, passedAttrs);
-    } else if (!passedAttrs) {
-      all = _.extend({}, modelAttrs, _.result(model, 'validation') || {});
-      attrs = pick(modelAttrs, _.keys(all));
-    } else {
-      attrs = passedAttrs;
-    }
-
-    return attrs;
   };
 
   /**
