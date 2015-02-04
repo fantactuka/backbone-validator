@@ -272,9 +272,21 @@ Backbone.Validator.validate({ name: '', email: '' }, validations); // -> { name:
 ## Preparing attributes before running validation
 You can change the way attributes to validate are extracted from the models. See original implementation for details:
 ```js
-Backbone.Validate.getAttrsToValidate = function(model, attributesList) {
+Backbone.Validator.getAttrsToValidate = function(model, attributesList) {
   ...
 }
+```
+
+## Formatting message
+In case you want to add specific message formatted, e.g. run all messages through _.template you can override Backbone.Validator.formatMessage hook:
+```js
+Backbone.Validator.formatMessage = function(message, attrName, attrValue, attrExpectation, validatorName, context) {
+  return _.template(message, {
+    name: attrName,
+    value: attrValue,
+    expectation: attrExpectation
+  });
+};
 ```
 
 ## Contributing
