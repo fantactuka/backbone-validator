@@ -278,7 +278,7 @@ Backbone.Validator.getAttrsToValidate = function(model, attributesList) {
 ```
 
 ## Formatting message
-In case you want to add specific message formatted, e.g. run all messages through _.template you can override Backbone.Validator.formatMessage hook:
+In case you want to add specific message formatted, e.g. run all messages through `_.template` you can override `Backbone.Validator.formatMessage` hook:
 ```js
 Backbone.Validator.formatMessage = function(message, attrName, attrValue, attrExpectation, validatorName, context) {
   return _.template(message, {
