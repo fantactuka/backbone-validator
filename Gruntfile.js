@@ -21,7 +21,7 @@ module.exports = function(grunt) {
       },
       watch: {
         options: {
-          browsers: ['PhantomJS'],
+          browsers: ['Chrome'],
           reporters: ['dots', 'growl'],
           singleRun: false,
           autoWatch: true

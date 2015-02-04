@@ -362,7 +362,7 @@ describe('Backbone.Validator', function() {
 
       it('filters empty error values', function() {
         model.triggerValidated(null, { email: [], name: ['Too short'] });
-        expect(invalid.argsForCall[0][2]).toEqual({ name: ['Too short'] });
+        expect(invalid.calls.argsFor(0)[2]).toEqual({ name: ['Too short'] });
       });
 
       it('fires validated:valid error if all errors are empty', function() {
@@ -374,7 +374,7 @@ describe('Backbone.Validator', function() {
 
     describe('#processErrors', function() {
       it('used from options', function() {
-        var spy = jasmine.createSpy('processErrors').andCallFake(function(errors) {
+        var spy = jasmine.createSpy('processErrors').and.callFake(function(errors) {
             return errors;
           }),
           errors = model.validate(null, { processErrors: spy });
@@ -383,7 +383,7 @@ describe('Backbone.Validator', function() {
       });
 
       it('used from global ModelCallbacks if not defined in options', function() {
-        var spy = spyOn(Validator.ModelCallbacks, 'processErrors').andCallThrough(),
+        var spy = spyOn(Validator.ModelCallbacks, 'processErrors').and.callThrough(),
           errors = model.validate(null);
 
         expect(spy).toHaveBeenCalledWith(errors);
@@ -415,7 +415,7 @@ describe('Backbone.Validator', function() {
         model: model
       });
 
-      jasmine.Clock.useMock();
+      jasmine.clock().install();
     });
 
     afterEach(function() {
@@ -434,7 +434,7 @@ describe('Backbone.Validator', function() {
         setup();
 
         model.validate({ email: 'user_example_com', name: 'Valid name' });
-        jasmine.Clock.tick(50);
+        jasmine.clock().tick(50);
 
         expect(valid).toHaveBeenCalledWith('name', 'Valid name', model);
         expect(invalid).toHaveBeenCalledWith('email', 'user_example_com', ['Invalid email'], model);
@@ -480,7 +480,7 @@ describe('Backbone.Validator', function() {
 
         view.remove();
         model.validate();
-        jasmine.Clock.tick(50);
+        jasmine.clock().tick(50);
 
         expect(valid).not.toHaveBeenCalled();
         expect(invalid).not.toHaveBeenCalled();
@@ -496,7 +496,7 @@ describe('Backbone.Validator', function() {
         view.remove();
 
         model.validate({ email: 'user@example.com' });
-        jasmine.Clock.tick(50);
+        jasmine.clock().tick(50);
 
         expect(spy).toHaveBeenCalled();
         expect(valid).not.toHaveBeenCalled();

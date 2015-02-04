@@ -262,7 +262,7 @@
    * @param allErrors
    */
   function cleanErrors(allErrors) {
-    var cleanErrors = _.inject(allErrors, function(memo, fieldErrors, attr) {
+    var errors = _.inject(allErrors, function(memo, fieldErrors, attr) {
       if (fieldErrors.length) {
         memo[attr] = _.isString(fieldErrors) ? [fieldErrors] : fieldErrors;
       }
@@ -270,7 +270,7 @@
       return memo;
     }, {});
 
-    return _.size(cleanErrors) ? cleanErrors : null;
+    return _.size(errors) ? errors : null;
   }
 
   function createErrorMessage() {
