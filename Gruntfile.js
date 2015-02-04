@@ -54,6 +54,12 @@ module.exports = function(grunt) {
       update: {
         src: ['bower.json', 'package.json', 'backbone-validator.js']
       }
+    },
+
+    exec: {
+      'npm-publish': {
+        cmd: 'npm publish'
+      }
     }
   });
 
@@ -62,6 +68,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-version');
+  grunt.loadNpmTasks('grunt-exec');
 
   grunt.registerTask('test', ['jshint', 'karma:ci', 'qunit']);
   grunt.registerTask('default', ['test']);
@@ -69,5 +76,6 @@ module.exports = function(grunt) {
   grunt.registerTask('release', 'Releasing new version with update version', function() {
     var type = this.args[0] || 'patch';
     grunt.task.run(['test', 'version:update:' + type, 'uglify']);
+    grunt.log.ok('Run grunt exec:npm-publish to release npm module update');
   });
 };
