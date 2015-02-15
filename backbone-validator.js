@@ -76,7 +76,7 @@
 
             errors.push(error);
           }
-        }, this);
+        }, this).value();
 
         return errors;
       }, [], this);
