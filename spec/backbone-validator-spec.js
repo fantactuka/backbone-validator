@@ -429,6 +429,7 @@ describe('Backbone.Validator', function() {
     });
 
     afterEach(function() {
+      jasmine.clock().uninstall();
       view.remove();
     });
 
