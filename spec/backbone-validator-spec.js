@@ -273,7 +273,21 @@ describe('Backbone.Validator', function() {
                 return !!value;
               }
             }
+          ],
+
+          field_5: [
+            {
+              required: false,
+              message: '#5 not required'
+            },
+            {
+              fn: function(value) {
+                return !!value;
+              },
+              message: '#5 from config'
+            }
           ]
+
         }
       });
 
