@@ -18,9 +18,9 @@
     "validator"
   ],
   "dependencies": {
-    "jquery": "~2.1.0",
-    "backbone": "~1.1.2",
-    "underscore": "~1.7.0"
+    "jquery": "*",
+    "backbone": "^1.1.2",
+    "underscore": "^1.6.0"
   },  
   "ignore": [
     "**/.*",
